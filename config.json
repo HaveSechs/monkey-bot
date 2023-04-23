@@ -1,0 +1,13 @@
+{
+  "message_multiplier": 1,
+  "message_range": [1, 7],
+
+  "items": {
+    "100 robux": {
+      "description": "AHHH I USED THE WRONG ACCOUNT"
+    }
+  },
+  "shop": [
+    {"item": "100 robux", "price": 4000}
+  ]
+}
