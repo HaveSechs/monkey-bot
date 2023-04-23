@@ -28,3 +28,12 @@ def get_user(id: int):
 
 def set_money(id: int, amount: int):
     users.update_one({"id": id}, {"$set": {"balance": amount}})
+
+
+def set_daily(id: int, val: bool):
+    users.update_one({"id": id}, {"$set": {"daily": val}})
+
+
+def reset_daily():
+    for user in users.find():
+        users.update_one({"id": user["id"]}, {"$set": {"daily": True}})
