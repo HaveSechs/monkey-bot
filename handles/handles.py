@@ -12,6 +12,13 @@ class handles(commands.Cog):
         self.config = config
 
     @commands.Cog.listener()
+    async def on_member_join(self, member):
+        try:
+            await member.send("**5 invites = Free Admin**\n\nAnyways meet some nigers while ur here")
+        except:
+            print(f"Could not dm {member.name}")
+
+    @commands.Cog.listener()
     async def on_message(self, message):
         amount = random.randint(self.config["message_range"][0], self.config["message_range"][1]) * self.config["message_multiplier"]
         print(amount)
