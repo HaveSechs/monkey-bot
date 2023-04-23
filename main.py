@@ -29,4 +29,4 @@ async def on_ready():
   /       \\""")
 
 
-monkey.run("MTA5OTQ4OTM1NTQ5MzU2MDM4Mw.G7lDob.omdKgYxDCbNc-HVwTdJNd5KSITBK7T7wdngETI")
+monkey.run("")
