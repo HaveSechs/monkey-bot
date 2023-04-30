@@ -44,12 +44,13 @@ class handles(commands.Cog):
         database.set_money(message.author.id, user["balance"] + amount)
 
         if message.author.id == 302050872383242240:
-            user = database.get_user(message.interaction.user.id)
-            if user is None:
-                database.new_user(message.author.id, 500)
-            else:
-                database.set_money(message.interaction.user.id, user["balance"] + 500)
-            await message.channel.send("Added 500!")
+            if message.embeds[0].to_dict()["description"].startswith("Bump done!"):
+                user = database.get_user(message.interaction.user.id)
+                if user is None:
+                    database.new_user(message.author.id, 500)
+                else:
+                    database.set_money(message.interaction.user.id, user["balance"] + 500)
+                await message.channel.send("Added 500!")
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
