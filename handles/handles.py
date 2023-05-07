@@ -26,11 +26,6 @@ class handles(commands.Cog):
         except:
             print(f"Could not dm {member.name}")
 
-        target = self.monkey.get_guild(self.config["guild"])
-        invites = await target.invites()
-
-        # for invite in invites:
-
     @commands.Cog.listener()
     async def on_message(self, message):
         if not message.author.bot and len(message.content) > 1:

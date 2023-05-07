@@ -51,7 +51,6 @@ class transactions(commands.Cog):
                 database.set_inventory(interaction.user.id, user["inventory"])
             else:
                 await interaction.response.send_message("no money no shit")
-        await interaction.response.send_message(f"You chose {item}")
 
 
 async def setup(monkey, config):
