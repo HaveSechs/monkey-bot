@@ -1,6 +1,6 @@
 from pymongo.mongo_client import MongoClient
 
-location = ""
+location = "mongodb+srv://Sachs:kCHWO8khWVShHNaT@monkey.e7eqorq.mongodb.net/?retryWrites=true&w=majority"
 
 client = MongoClient(location)
 database = client["Monkey"]
@@ -32,6 +32,10 @@ def set_money(id: int, amount: int):
 
 def set_daily(id: int, val: bool):
     users.update_one({"id": id}, {"$set": {"daily": val}})
+
+
+def set_inventory(id: int, inv: dict):
+    users.update_one({"id": id}, {"$set": {"inventory": inv}})
 
 
 def reset_daily():
