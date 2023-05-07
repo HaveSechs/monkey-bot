@@ -33,15 +33,15 @@ class handles(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        amount = random.randint(self.config["message_range"][0], self.config["message_range"][1]) * self.config["message_multiplier"]
-        # print(amount)
+        if not message.author.bot and len(message.content) > 1:
+            amount = random.randint(self.config["message_range"][0], self.config["message_range"][1]) * self.config["message_multiplier"]
 
-        user = database.get_user(message.author.id)
-        if user is None:
-            database.new_user(message.author.id)
             user = database.get_user(message.author.id)
+            if user is None:
+                database.new_user(message.author.id)
+                user = database.get_user(message.author.id)
 
-        database.set_money(message.author.id, user["balance"] + amount)
+            database.set_money(message.author.id, user["balance"] + amount)
 
         if message.author.id == 302050872383242240:
             if message.embeds[0].to_dict()["description"].startswith("Bump done!"):
