@@ -46,9 +46,16 @@ class displayEconomy(commands.Cog):
     async def shop(self, interaction: discord.Interaction):
         embed = discord.Embed(title="Shop", color=0x336EFF)
 
-        for item in self.config["shop"]:
-            # print(item, self.config['shop'])
-            embed.add_field(name=f"{item['item']} - {item['price']} :monkey_face:", value=self.config['items'][item['item']]['description'], inline=False)
+        for item in self.config["shop"].keys():
+            shop = self.config["shop"]
+            embed.add_field(name=f"{item} - {shop[item]['price']} :monkey_face:", value=self.config["items"][item]["description"], inline=False)
+
+        await interaction.response.send_message(embed=embed)
+
+    @app_commands.command(name="multipliers", description="boosting ur dumbness")
+    async def multipliers(self, interaction: discord.Interaction):
+        embed = discord.Embed(title="Multipliers", color=0x336EFF)
+        embed.add_field(name="Message", value=f"{self.config['message_multiplier']}", inline=False)
 
         await interaction.response.send_message(embed=embed)
 
