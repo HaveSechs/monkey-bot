@@ -11,10 +11,11 @@ class utilities(commands.Cog):
     async def suggest(self, interaction: discord.Interaction, sentence: str):
         if len(sentence.split()) < 3:
             await interaction.response.send_message("too short bozo")
-        with open("suggestions.txt", "a") as f:
-            f.write(sentence + "\n")
+        else:
+            with open("suggestions.txt", "a") as f:
+                f.write(sentence + "\n")
 
-        await interaction.response.send_message("done")
+            await interaction.response.send_message("done")
 
 
 async def setup(monkey, config):
