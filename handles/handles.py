@@ -28,6 +28,10 @@ class handles(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+
+        if random.randint(1, 5) == 3:
+            await message.channel.send(random.choice(self.config["random_messages"]))
+
         if not message.author.bot and len(message.content) > 1:
             amount = random.randint(self.config["message_range"][0], self.config["message_range"][1]) * self.config["message_multiplier"]
 
@@ -53,7 +57,6 @@ class handles(commands.Cog):
             content = re.sub("@everyone", "", message.content)
             await message.channel.send(f"""\"{content}\"
     
-
 -<@{message.author.id}>""")
 
 
