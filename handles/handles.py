@@ -29,7 +29,7 @@ class handles(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
 
-        if random.randint(1, 5) == 3:
+        if random.randint(self.config["random_message_range"][0], self.config["random_message_range"][1]) == 3:
             await message.channel.send(random.choice(self.config["random_messages"]))
 
         if not message.author.bot and len(message.content) > 1:
