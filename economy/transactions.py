@@ -44,7 +44,11 @@ class transactions(commands.Cog):
         else:
             if user["balance"] >= self.config["shop"][item]["price"]:
                 database.set_money(interaction.user.id, user["balance"] - self.config["shop"][item]["price"])
-                # TODO: add item to inventory
+                try:
+                    user["inventory"][item] += 1
+                except:
+                    user["inventory"][item] = 1
+                database.set_inventory(interaction.user.id, user["inventory"])
             else:
                 await interaction.response.send_message("no money no shit")
         await interaction.response.send_message(f"You chose {item}")
