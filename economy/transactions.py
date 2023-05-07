@@ -1,5 +1,7 @@
 import time
 import asyncio
+from typing import Literal
+
 import discord
 import database
 from discord.ext import commands
@@ -31,6 +33,21 @@ class transactions(commands.Cog):
                 await interaction.response.send_message("MTA5OTQ4OTM1NTQ5MzU2MDM4Mw.XyPUFE.N77Av8NyNgV4QxXA8qFpSAMspMOo2")
             else:
                 await interaction.response.send_message("does 24 hours equal 2 seconds?")
+
+    @app_commands.command(name="buy", description="robux robux time !!!!")
+    @app_commands.describe(item="you are brokie")
+    async def buy(self, interaction: discord.Interaction, item: Literal["100 robux"]):
+        user = database.get_user(interaction.user.id)
+        if user is None:
+            database.new_user(interaction.user.id)
+            await interaction.response.send_message("too broke")
+        else:
+            if user["balance"] >= self.config["shop"][item]["price"]:
+                database.set_money(interaction.user.id, user["balance"] - self.config["shop"][item]["price"])
+                # TODO: add item to inventory
+            else:
+                await interaction.response.send_message("no money no shit")
+        await interaction.response.send_message(f"You chose {item}")
 
 
 async def setup(monkey, config):
