@@ -26,7 +26,6 @@ class transactions(commands.Cog):
         if user is None:
             database.new_user(interaction.user.id, 100, False)
         else:
-            print(user)
             if user["daily"] is True:
                 database.set_money(interaction.user.id, user["balance"] + 100)
                 database.set_daily(interaction.user.id, False)
@@ -40,17 +39,36 @@ class transactions(commands.Cog):
         user = database.get_user(interaction.user.id)
         if user is None:
             database.new_user(interaction.user.id)
-            await interaction.response.send_message("too broke")
+            user = database.get_user(interaction.user.id)
+
+        if user["balance"] >= self.config["shop"][item]["price"]:
+            database.set_money(interaction.user.id, user["balance"] - self.config["shop"][item]["price"])
+            try:
+                user["inventory"][item] += 1
+            except:
+                user["inventory"][item] = 1
+            database.set_inventory(interaction.user.id, user["inventory"])
         else:
-            if user["balance"] >= self.config["shop"][item]["price"]:
-                database.set_money(interaction.user.id, user["balance"] - self.config["shop"][item]["price"])
-                try:
-                    user["inventory"][item] += 1
-                except:
-                    user["inventory"][item] = 1
-                database.set_inventory(interaction.user.id, user["inventory"])
-            else:
-                await interaction.response.send_message("no money no shit")
+            await interaction.response.send_message("no money no shit")
+
+    @app_commands.command(name="sell", description="selling black people")
+    @app_commands.describe(item="black person")
+    async def sell(self, interaction: discord.Interaction, item: Literal["100 robux"], amount: int = 1):
+        user = database.get_user(interaction.user.id)
+
+        if user is None:
+            database.new_user(interaction.user.id)
+            user = database.get_user(interaction.user.id)
+
+        user["inventory"][item]["amount"] -= amount
+
+        if user["inventory"][item] == 0:
+            del user["inventory"][item]
+
+        database.set_money(interaction.user.id, user["balance"] + amount * self.config["items"][item]["sell_value"])
+        database.set_inventory(interaction.user.id, user["inventory"])
+
+        await interaction.response.send_message("Sold!")
 
 
 async def setup(monkey, config):

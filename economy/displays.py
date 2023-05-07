@@ -38,7 +38,7 @@ class displayEconomy(commands.Cog):
         embed = discord.Embed(title=f"{who.name}'s Inventory", color=0x336EFF)
 
         for item in user["inventory"]:
-            embed.add_field(name=f"{item} - {user['inventory'][item]['amount']}", value=user['inventory'][item]['description'], inline=False)
+            embed.add_field(name=f"{item} - {user['inventory'][item]['amount']}", value=self.config["items"][item]["description"], inline=False)
 
         await interaction.response.send_message(embed=embed)
 

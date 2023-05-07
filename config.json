@@ -4,7 +4,8 @@
 
   "items": {
     "100 robux": {
-      "description": "AHHH I USED THE WRONG ACCOUNT"
+      "description": "AHHH I USED THE WRONG ACCOUNT",
+      "sell_value": 360
     }
   },
   "shop": {
