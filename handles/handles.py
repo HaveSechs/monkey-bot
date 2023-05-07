@@ -56,10 +56,10 @@ class handles(commands.Cog):
     async def on_message_delete(self, message):
         if message.author.id != self.monkey.user.id and len(message.content) != 0:
             content = re.sub("@everyone", "", message.content)
-            await message.channel.send(f"""# \"{content}\"
+            await message.channel.send(f"""\"{content}\"
     
 
-# -<@{message.author.id}>""")
+-<@{message.author.id}>""")
 
 
 async def setup(monkey, config):
