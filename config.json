@@ -7,7 +7,13 @@
       "description": "AHHH I USED THE WRONG ACCOUNT"
     }
   },
-  "shop": [
-    {"item": "100 robux", "price": 4000}
+  "shop": {
+    "100 robux": {
+      "price": 4000
+    }
+  },
+
+  "admins": [
+    1092243583735705601
   ]
 }
