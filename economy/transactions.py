@@ -60,15 +60,18 @@ class transactions(commands.Cog):
             database.new_user(interaction.user.id)
             user = database.get_user(interaction.user.id)
 
-        user["inventory"][item]["amount"] -= amount
+        if amount <= user["inventory"][item]["amount"]:
+            user["inventory"][item]["amount"] -= amount
 
-        if user["inventory"][item] == 0:
-            del user["inventory"][item]
+            if user["inventory"][item] == 0:
+                del user["inventory"][item]
 
-        database.set_money(interaction.user.id, user["balance"] + amount * self.config["items"][item]["sell_value"])
-        database.set_inventory(interaction.user.id, user["inventory"])
+            database.set_money(interaction.user.id, user["balance"] + amount * self.config["items"][item]["sell_value"])
+            database.set_inventory(interaction.user.id, user["inventory"])
 
-        await interaction.response.send_message("Sold!")
+            await interaction.response.send_message("Sold!")
+        else:
+            await interaction.response.send_message("cant count moment")
 
 
 async def setup(monkey, config):
