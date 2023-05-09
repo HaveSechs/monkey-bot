@@ -35,18 +35,18 @@ class transactions(commands.Cog):
 
     @app_commands.command(name="buy", description="robux robux time !!!!")
     @app_commands.describe(item="you are brokie")
-    async def buy(self, interaction: discord.Interaction, item: Literal["100 robux"]):
+    async def buy(self, interaction: discord.Interaction, item: Literal["100 robux"], amount: int = 1):
         user = database.get_user(interaction.user.id)
         if user is None:
             database.new_user(interaction.user.id)
             user = database.get_user(interaction.user.id)
 
-        if user["balance"] >= self.config["shop"][item]["price"]:
-            database.set_money(interaction.user.id, user["balance"] - self.config["shop"][item]["price"])
+        if user["balance"] >= self.config["shop"][item]["price"] * amount:
+            database.set_money(interaction.user.id, user["balance"] - self.config["shop"][item]["price"] * amount)
             try:
-                user["inventory"][item] += 1
+                user["inventory"][item] += amount
             except:
-                user["inventory"][item] = 1
+                user["inventory"][item] = amount
             database.set_inventory(interaction.user.id, user["inventory"])
         else:
             await interaction.response.send_message("no money no shit")
