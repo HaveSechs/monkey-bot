@@ -32,8 +32,7 @@ class transactions(commands.Cog):
                 database.set_daily(interaction.user.id, False)
                 await interaction.response.send_message("MTA5OTQ4OTM1NTQ5MzU2MDM4Mw.XyPUFE.N77Av8NyNgV4QxXA8qFpSAMspMOo2")
             else:
-                view = eco.dailyVisual()
-                await interaction.response.send_message("does 24 hours equal 2 seconds?", view=view)
+                await interaction.response.send_message("does 24 hours equal 2 seconds?", view=eco.dailyVisual(interaction.user.id))
 
     @app_commands.command(name="buy", description="robux robux time !!!!")
     @app_commands.describe(item="you are brokie")
