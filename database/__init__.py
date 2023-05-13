@@ -1,6 +1,6 @@
 from pymongo.mongo_client import MongoClient
 
-location = ""
+location = "mongodb+srv://Sachs:kCHWO8khWVShHNaT@monkey.e7eqorq.mongodb.net/?retryWrites=true&w=majority"
 
 client = MongoClient(location)
 database = client["Monkey"]
