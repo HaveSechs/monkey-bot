@@ -45,9 +45,9 @@ class transactions(commands.Cog):
         if user["balance"] >= self.config["shop"][item]["price"] * amount:
             database.set_money(interaction.user.id, user["balance"] - self.config["shop"][item]["price"] * amount)
             try:
-                user["inventory"][item] += amount
+                user["inventory"][item]["amount"] += amount
             except:
-                user["inventory"][item] = amount
+                user["inventory"][item]["amount"] = amount
             database.set_inventory(interaction.user.id, user["inventory"])
         else:
             await interaction.response.send_message("no money no shit")
