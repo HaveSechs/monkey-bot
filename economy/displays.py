@@ -42,6 +42,24 @@ class displayEconomy(commands.Cog):
 
         await interaction.response.send_message(embed=embed)
 
+    @app_commands.command(name="pets", description="nesi is no longer my pet")
+    async def pets(self, interaction: discord.Interaction, who: discord.User = None):
+        if who is None:
+            who = interaction.user
+
+        user = database.get_user(who.id)
+        if user is None:
+            database.new_user(who.id)
+            user = database.get_user(who.id)
+
+        embed = discord.Embed(title=f"{who.name}'s Pets", color=0x336EFF)
+
+        for pet in user["pets"]:
+            info = database.get_monkey(pet)
+            embed.add_field(name=info["type"], value=f":heart: {info['health']} :dagger: {info['attack']}", inline=False)
+
+        await interaction.response.send_message(embed=embed)
+
     @app_commands.command(name="shop", description="look at all the things you can't afford")
     async def shop(self, interaction: discord.Interaction):
         embed = discord.Embed(title="Shop", color=0x336EFF)

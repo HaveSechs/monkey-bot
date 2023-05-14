@@ -1,5 +1,7 @@
 import random
 import discord
+import database
+from visuals import monkie
 
 class monkeys:
     def __init__(self, monkey):
@@ -9,6 +11,10 @@ class monkeys:
                 "asset": "assets/basic.png",
                 "chance": (1, 100)
             }
+        }
+
+        self.ftm = {
+            "assets/basic.png": "basic monkey"
         }
 
     def random_monkey(self):
@@ -21,5 +27,7 @@ class monkeys:
                 return self.monkeys[monkey]["asset"]
 
     async def spawn(self, channel_id):
+        monkey = self.random_monkey()
         channel = self.monkey.get_channel(channel_id)
-        await channel.send("Your dad just appeared!", file=discord.File(self.random_monkey()))
+
+        await channel.send("Your dad just appeared!", file=discord.File(monkey), view=monkie.catch(database.new_monkey(self.ftm[monkey])))
