@@ -2,23 +2,19 @@ import re
 import random
 import discord
 import database
+from monkeys import monkeys
 from discord.ext import commands
 from discord import app_commands
 
 
 class handles(commands.Cog):
     def __init__(self, monkey, config):
+        self.monkeys = monkeys.monkeys(monkey)
         self.monkey = monkey
         self.config = config
         self.invites = None
+        self.chance = 0
 
-    """
-    @commands.Cog.listener()
-    async def on_ready(self):
-        # you can make this bot for multiple servers if you want but I made it only for mine
-        target = self.monkey.get_guild(self.config["guild"])
-        self.invites = await target.invites()
-    """
     @commands.Cog.listener()
     async def on_member_join(self, member):
         try:
@@ -28,6 +24,11 @@ class handles(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        self.chance += 1
+
+        if random.randint(1, 100) <= self.chance:
+            await self.monkeys.spawn(message.channel.id)
+            self.chance = 0
 
         if random.randint(self.config["random_message_range"][0], self.config["random_message_range"][1]) == 3:
             await message.channel.send(random.choice(self.config["random_messages"]))

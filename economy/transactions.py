@@ -64,7 +64,7 @@ class transactions(commands.Cog):
         if amount <= user["inventory"][item]["amount"]:
             user["inventory"][item]["amount"] -= amount
 
-            if user["inventory"][item] == 0:
+            if user["inventory"][item]["amount"] == 0:
                 del user["inventory"][item]
 
             database.set_money(interaction.user.id, user["balance"] + amount * self.config["items"][item]["sell_value"])
