@@ -1,4 +1,5 @@
 import re
+import time
 import random
 import discord
 import database
@@ -14,6 +15,7 @@ class handles(commands.Cog):
         self.config = config
         self.invites = None
         self.chance = 0
+        self.cache = {}
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -24,11 +26,16 @@ class handles(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        self.chance += 1
+        if message.guild.id not in self.cache:
+            self.cache[message.guild.id] = 0
 
-        if random.randint(1, 100) <= self.chance:
-            await self.monkeys.spawn(message.channel.id)
-            self.chance = 0
+        if int(time.time()) - self.cache[message.guild.id] >= 120:
+            self.chance += 1
+
+            if random.randint(1, 100) <= self.chance:
+                await self.monkeys.spawn(message.channel.id)
+                self.cache[message.guild.id] = int(time.time())
+                self.chance = 0
 
         if random.randint(self.config["random_message_range"][0], self.config["random_message_range"][1]) == 3:
             await message.channel.send(random.choice(self.config["random_messages"]))
