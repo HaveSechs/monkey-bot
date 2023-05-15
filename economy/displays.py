@@ -3,6 +3,8 @@ import database
 from discord.ext import commands
 from discord import app_commands
 
+import visuals.monkie
+
 
 class displayEconomy(commands.Cog):
     def __init__(self, monkey, config):
@@ -56,7 +58,21 @@ class displayEconomy(commands.Cog):
 
         for pet in user["pets"]:
             info = database.get_monkey(pet)
-            embed.add_field(name=info["type"], value=f":heart: {info['health']} :dagger: {info['attack']}", inline=False)
+            embed.add_field(name=info["type"] + f" ({info['id']})", value=f":heart: {info['health']} :dagger: {info['attack']}", inline=False)
+
+        await interaction.response.send_message(embed=embed)
+
+    @app_commands.command(name="view_pet", description="i have no pets :(")
+    async def view_pet(self, interaction: discord.Interaction, pet: int):
+        pet = database.get_monkey(pet)
+        # card = visuals.monkie.draw_card(pet["type"], self.config["monkey_abilities"][pet["type"]]["ability"], self.config["monkey_abilities"][pet["type"]]["desc"], pet["health"], pet["attack"], f"assets/C{self.config['monkeys'][pet['type']]['asset'].split('/')[1]}")
+        # await interaction.response.send_message(file=card)
+
+        # TODO: make it an image
+        embed = discord.Embed(title=f"{pet['type']} ({pet['id']})")
+        embed.add_field(name=f"Ability: {self.config['monkey_abilities'][pet['type']]['ability']}", value=self.config['monkey_abilities'][pet['type']]['desc'], inline=False)
+        embed.add_field(name=f"Health: ", value=f":heart: {pet['health']}")
+        embed.add_field(name=f"Attack: ", value=f":dagger: {pet['attack']}")
 
         await interaction.response.send_message(embed=embed)
 

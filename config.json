@@ -23,5 +23,28 @@
     ":warning: **remember we do not tolerate racism in this server**",
     ":warning: **remember we do not tolerate pedophilia in this server**",
     "**proud supporters of discord's tos**"
-  ]
+  ],
+
+  "monkeys": {
+    "basic monkey": {
+      "asset": "assets/basic.png",
+      "chance": [1, 80]
+    },
+    "violent monkey": {
+      "asset": "assets/violent.png",
+      "chance": [81, 100]
+    }
+  },
+
+  "monkey_abilities": {
+    "basic monkey": {
+      "ability": "Slave",
+      "desc": "Gives any non basic monkey turn a extra turn (usable 2 times)"
+    },
+
+    "violent monkey": {
+      "ability": "AK-47",
+      "desc": "Can attack twice in same turn"
+    }
+  }
 }

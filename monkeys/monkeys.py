@@ -9,12 +9,18 @@ class monkeys:
         self.monkeys = {
             "average monkey": {
                 "asset": "assets/basic.png",
-                "chance": (1, 100)
+                "chance": (1, 80)
+            },
+
+            "violent monkey": {
+                "asset": "assets/violent.png",
+                "chance": (81, 100)
             }
         }
 
         self.ftm = {
-            "assets/basic.png": "basic monkey"
+            "assets/basic.png": "basic monkey",
+            "assets/violent.png": "violent monkey"
         }
 
     def random_monkey(self):
