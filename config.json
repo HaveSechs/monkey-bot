@@ -45,6 +45,11 @@
     "violent monkey": {
       "ability": "AK-47",
       "desc": "Can attack twice in same turn"
+    },
+
+    "zombie monkey": {
+      "ability": "Not Alive so can't die",
+      "desc": "Can only be killed by magic"
     }
   }
 }
