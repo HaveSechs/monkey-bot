@@ -51,5 +51,10 @@
       "ability": "Not Alive so can't die",
       "desc": "Can only be killed by magic"
     }
+  },
+
+  "monkey_emojis": {
+    "basic monkey": "<:basic:1109319031044984915>",
+    "zombie monkey": "<:zombie:1109320017109078166>"
   }
 }

@@ -2,6 +2,7 @@ import discord
 import database
 from discord.ext import commands
 from discord import app_commands
+from utilities.utilities import utilities
 
 import visuals.monkie
 
@@ -63,6 +64,7 @@ class displayEconomy(commands.Cog):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="view_pet", description="i have no pets :(")
+    @app_commands.autocomplete(pet=utilities.autocomplete_id)
     async def view_pet(self, interaction: discord.Interaction, pet: int):
         pet = database.get_monkey(pet)
         # card = visuals.monkie.draw_card(pet["type"], self.config["monkey_abilities"][pet["type"]]["ability"], self.config["monkey_abilities"][pet["type"]]["desc"], pet["health"], pet["attack"], f"assets/C{self.config['monkeys'][pet['type']]['asset'].split('/')[1]}")
@@ -90,6 +92,26 @@ class displayEconomy(commands.Cog):
     async def multipliers(self, interaction: discord.Interaction):
         embed = discord.Embed(title="Multipliers", color=0x336EFF)
         embed.add_field(name="Message", value=f"{self.config['message_multiplier']}", inline=False)
+
+        await interaction.response.send_message(embed=embed)
+
+    @app_commands.command(name="deck", description="show us ur zoo")
+    async def deck(self, interaction: discord.Interaction, who: discord.User = None):
+        if who is None:
+            who = interaction.user.id
+
+        user = database.get_user(interaction.user.id)
+        if user is None:
+            database.new_user(who)
+            user = database.get_user(who)
+
+        embed = discord.Embed(title="Deck", color=0x336EFF)
+        for monkey in user["deck"]:
+            if monkey is not None:
+                real = database.get_monkey(monkey)
+                embed.add_field(name=real["type"], value=f":heart: {real['health']} :dagger: {real['attack']}", inline=True)
+            else:
+                embed.add_field(name="Empty", value=":heart: 0 :dagger: 0", inline=True)
 
         await interaction.response.send_message(embed=embed)
 

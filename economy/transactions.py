@@ -6,8 +6,9 @@ import discord
 import database
 from discord.ext import commands
 from discord import app_commands
+from utilities.utilities import utilities
 from visuals import eco
-
+from visuals import monkie
 
 class transactions(commands.Cog):
     def __init__(self, monkey, config):
@@ -73,6 +74,58 @@ class transactions(commands.Cog):
             await interaction.response.send_message("Sold!")
         else:
             await interaction.response.send_message("cant count moment")
+
+    @app_commands.command(name="deck_set", description="guts")
+    @app_commands.autocomplete(id=utilities.autocomplete_id)
+    async def deck_set(self, interaction: discord.Interaction, id: str, slot: int):
+        id = int(id)
+        user = database.get_user(interaction.user.id)
+
+        if user is None:
+            database.new_user(interaction.user.id)
+            user = database.get_user(interaction.user.id)
+
+        if id not in user["pets"]:
+            await interaction.response.send_message("non existent slave moment", ephemeral=True)
+        else:
+            if 1 <= slot <= 5:
+                database.set_deck(interaction.user.id, slot - 1, id)
+                await interaction.response.send_message("ok")
+            else:
+                await interaction.response.send_message("1 through 5 bozo", ephermeral=True)
+
+    @app_commands.command(name="fight", description="one")
+    async def fight(self, interaction: discord.Interaction, user: discord.User):
+        user1 = database.get_user(interaction.user.id)
+        user2 = database.get_user(user.id)
+        if user1 is None:
+            database.new_user(interaction.user.id)
+            user1 = database.get_user(interaction.user.id)
+
+        if user2 is None:
+            database.new_user(user.id)
+            user2 = database.get_user(user.id)
+
+        if user1["deck"].count(None) == 5 or user2["deck"].count(None) == 5:
+            await interaction.response.send_message("one of you guys has no slaves")
+        else:
+
+            you = ""
+            opp = ""
+
+            for monkey in user1["deck"]:
+                if monkey is not None:
+                    animal = database.get_monkey(monkey)
+                    you += f"{self.config['monkey_emojis'][animal['type']]} **{animal['health']} :heart:** "
+
+            for monkey in user2["deck"]:
+                if monkey is not None:
+                    animal = database.get_monkey(monkey)
+                    opp += f"{self.config['monkey_emojis'][animal['type']]} **{animal['health']} :heart:** "
+            embed = discord.Embed(title="Battle")
+            embed.add_field(name="You", value=f"{you}")
+            embed.add_field(name="Opponent", value=f"{opp}", inline=False)
+            await interaction.response.send_message(embed=embed, view=monkie.fight(interaction.user, user, self.config))
 
 
 async def setup(monkey, config):

@@ -78,10 +78,16 @@ def new_monkey(type):
     return monkey_id
 
 
-def get_monkey(id):
+def get_monkey(id: int):
     return monkeys.find_one({"id": id})
 
 
 def reset_daily():
     for user in users.find():
         users.update_one({"id": user["id"]}, {"$set": {"daily": True}})
+
+
+def set_deck(id: int, slot: int, monkey: int):
+    user = users.find_one({"id": id})
+    user["deck"][slot] = monkey
+    users.update_one({"id": id}, {"$set": {"deck": user["deck"]}})
