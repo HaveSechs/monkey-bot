@@ -51,6 +51,10 @@ stats = {
         "health": 100,
         "attack": 100
     },
+    "wizard monkey": {
+        "health": 100,
+        "attack": 75
+    },
     "violent monkey": {
         "health": 100,
         "attack": 125

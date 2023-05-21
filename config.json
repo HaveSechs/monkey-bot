@@ -50,11 +50,30 @@
     "zombie monkey": {
       "ability": "Not Alive so can't die",
       "desc": "Can only be killed by magic"
+    },
+
+    "wizard monkey": {
+      "ability": "null",
+      "desc": "null"
     }
   },
 
   "monkey_emojis": {
     "basic monkey": "<:basic:1109319031044984915>",
-    "zombie monkey": "<:zombie:1109320017109078166>"
-  }
+    "zombie monkey": "<:zombie:1109320017109078166>",
+    "violent monkey": "<:violent:1109665256604717066>",
+    "wizard monkey": "<:null:69>"
+  },
+
+  "default_extra_turns": [
+    "violent monkey"
+  ],
+
+  "magic_monkeys": [
+    "wizard monkey"
+  ],
+
+  "magic_only": [
+    "zombie monkey"
+  ]
 }

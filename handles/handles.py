@@ -26,38 +26,39 @@ class handles(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.guild.id not in self.cache:
-            self.cache[message.guild.id] = 0
+        if message.guild is not None:
+            if message.guild.id not in self.cache:
+                self.cache[message.guild.id] = 0
 
-        if int(time.time()) - self.cache[message.guild.id] >= 120:
-            self.chance += 1
+            if int(time.time()) - self.cache[message.guild.id] >= 120:
+                self.chance += 1
 
-            if random.randint(1, 100) <= self.chance:
-                await self.monkeys.spawn(message.channel.id)
-                self.cache[message.guild.id] = int(time.time())
-                self.chance = 0
+                if random.randint(1, 100) <= self.chance:
+                    await self.monkeys.spawn(message.channel.id)
+                    self.cache[message.guild.id] = int(time.time())
+                    self.chance = 0
 
-        if random.randint(self.config["random_message_range"][0], self.config["random_message_range"][1]) == 3:
-            await message.channel.send(random.choice(self.config["random_messages"]))
+            if random.randint(self.config["random_message_range"][0], self.config["random_message_range"][1]) == 3:
+                await message.channel.send(random.choice(self.config["random_messages"]))
 
-        if not message.author.bot and len(message.content) > 1:
-            amount = random.randint(self.config["message_range"][0], self.config["message_range"][1]) * self.config["message_multiplier"]
+            if not message.author.bot and len(message.content) > 1:
+                amount = random.randint(self.config["message_range"][0], self.config["message_range"][1]) * self.config["message_multiplier"]
 
-            user = database.get_user(message.author.id)
-            if user is None:
-                database.new_user(message.author.id)
                 user = database.get_user(message.author.id)
-
-            database.set_money(message.author.id, user["balance"] + amount)
-
-        if message.author.id == 302050872383242240:
-            if message.embeds[0].to_dict()["description"].startswith("Bump done!"):
-                user = database.get_user(message.interaction.user.id)
                 if user is None:
-                    database.new_user(message.author.id, 500)
-                else:
-                    database.set_money(message.interaction.user.id, user["balance"] + 500)
-                await message.channel.send("Added 500!")
+                    database.new_user(message.author.id)
+                    user = database.get_user(message.author.id)
+
+                database.set_money(message.author.id, user["balance"] + amount)
+
+            if message.author.id == 302050872383242240:
+                if message.embeds[0].to_dict()["description"].startswith("Bump done!"):
+                    user = database.get_user(message.interaction.user.id)
+                    if user is None:
+                        database.new_user(message.author.id, 500)
+                    else:
+                        database.set_money(message.interaction.user.id, user["balance"] + 500)
+                    await message.channel.send("Added 500!")
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):

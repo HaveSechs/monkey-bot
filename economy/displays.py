@@ -57,15 +57,27 @@ class displayEconomy(commands.Cog):
 
         embed = discord.Embed(title=f"{who.name}'s Pets", color=0x336EFF)
 
-        for pet in user["pets"]:
+        for pet in user["pets"][:10]:
             info = database.get_monkey(pet)
+            print(info['id'], user["pets"])
             embed.add_field(name=info["type"] + f" ({info['id']})", value=f":heart: {info['health']} :dagger: {info['attack']}", inline=False)
 
-        await interaction.response.send_message(embed=embed)
+        pets = [[]]
+        cnt = 0
+        for pet in range(len(user["pets"])):
+            if pet % 10 == 0 and pet != 0:
+                pets.append([])
+                cnt += 1
+            else:
+                pets[cnt].append(user["pets"][pet])
+        print(pets)
+
+        await interaction.response.send_message(embed=embed, view=visuals.monkie.petsDisplay(pets))
 
     @app_commands.command(name="view_pet", description="i have no pets :(")
     @app_commands.autocomplete(pet=utilities.autocomplete_id)
-    async def view_pet(self, interaction: discord.Interaction, pet: int):
+    async def view_pet(self, interaction: discord.Interaction, pet: str):
+        pet = int(pet)
         pet = database.get_monkey(pet)
         # card = visuals.monkie.draw_card(pet["type"], self.config["monkey_abilities"][pet["type"]]["ability"], self.config["monkey_abilities"][pet["type"]]["desc"], pet["health"], pet["attack"], f"assets/C{self.config['monkeys'][pet['type']]['asset'].split('/')[1]}")
         # await interaction.response.send_message(file=card)

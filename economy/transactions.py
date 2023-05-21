@@ -9,6 +9,7 @@ from discord import app_commands
 from utilities.utilities import utilities
 from visuals import eco
 from visuals import monkie
+from visuals import fighting
 
 class transactions(commands.Cog):
     def __init__(self, monkey, config):
@@ -88,11 +89,12 @@ class transactions(commands.Cog):
         if id not in user["pets"]:
             await interaction.response.send_message("non existent slave moment", ephemeral=True)
         else:
-            if 1 <= slot <= 5:
-                database.set_deck(interaction.user.id, slot - 1, id)
-                await interaction.response.send_message("ok")
-            else:
-                await interaction.response.send_message("1 through 5 bozo", ephermeral=True)
+            if id not in user["deck"]:
+                if 1 <= slot <= 5:
+                    database.set_deck(interaction.user.id, slot - 1, id)
+                    await interaction.response.send_message("ok")
+                else:
+                    await interaction.response.send_message("1 through 5 bozo", ephermeral=True)
 
     @app_commands.command(name="fight", description="one")
     async def fight(self, interaction: discord.Interaction, user: discord.User):
@@ -113,19 +115,26 @@ class transactions(commands.Cog):
             you = ""
             opp = ""
 
+            cnt = 1
+
             for monkey in user1["deck"]:
                 if monkey is not None:
                     animal = database.get_monkey(monkey)
-                    you += f"{self.config['monkey_emojis'][animal['type']]} **{animal['health']} :heart:** "
+                    you += f"({cnt}) {self.config['monkey_emojis'][animal['type']]} **{animal['health']} :heart: {animal['attack']} :dagger:**\n"
+                    cnt += 1
+
+            cnt = 1
 
             for monkey in user2["deck"]:
                 if monkey is not None:
                     animal = database.get_monkey(monkey)
-                    opp += f"{self.config['monkey_emojis'][animal['type']]} **{animal['health']} :heart:** "
+                    opp += f"({cnt}) {self.config['monkey_emojis'][animal['type']]} **{animal['health']} :heart: {animal['attack']} :dagger:**\n"
+                    cnt += 1
+
             embed = discord.Embed(title="Battle")
-            embed.add_field(name="You", value=f"{you}")
-            embed.add_field(name="Opponent", value=f"{opp}", inline=False)
-            await interaction.response.send_message(embed=embed, view=monkie.fight(interaction.user, user, self.config))
+            embed.add_field(name=f"{interaction.user.name}", value=f"{you}")
+            embed.add_field(name=f"{user.name}", value=f"{opp}", inline=False)
+            await interaction.response.send_message(embed=embed, view=fighting.fight(interaction.user, user, self.config))
 
 
 async def setup(monkey, config):
