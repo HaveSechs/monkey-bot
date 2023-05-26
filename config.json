@@ -1,5 +1,5 @@
 {
-  "message_multiplier": 2,
+  "message_multiplier": 1,
   "message_range": [1, 7],
 
   "items": {
@@ -20,19 +20,35 @@
 
   "random_message_range": [1, 10],
   "random_messages": [
-    ":warning: **remember we do not tolerate racism in this server**",
-    ":warning: **remember we do not tolerate pedophilia in this server**",
-    "**proud supporters of discord's tos**"
+    "# :warning: **remember we do not tolerate racism in this server**",
+    "# :warning: **remember we do not tolerate pedophilia in this server**",
+    "# **proud supporters of discord's tos**"
   ],
 
   "monkeys": {
-    "basic monkey": {
+    "average monkey": {
       "asset": "assets/basic.png",
-      "chance": [1, 80]
+      "chance": [1, 34.5]
     },
+
+    "wizard monkey": {
+      "asset": "assets/wizard.png",
+      "chance": [34.6, 69]
+    },
+
     "violent monkey": {
       "asset": "assets/violent.png",
-      "chance": [81, 100]
+      "chance": [70, 89]
+    },
+
+    "zombie monkey": {
+      "asset": "assets/zombie.png",
+      "chance": [90, 99]
+    },
+
+    "albino monkey": {
+      "asset": "assets/albino.png",
+      "chance": [100, 100]
     }
   },
 
@@ -55,6 +71,11 @@
     "wizard monkey": {
       "ability": "null",
       "desc": "null"
+    },
+
+    "albino monkey": {
+      "ability": "White supremacy",
+      "desc": "Does x10 damage to black monkeys"
     }
   },
 
@@ -62,18 +83,44 @@
     "basic monkey": "<:basic:1109319031044984915>",
     "zombie monkey": "<:zombie:1109320017109078166>",
     "violent monkey": "<:violent:1109665256604717066>",
-    "wizard monkey": "<:null:69>"
+    "wizard monkey": "<:wizard:1109986416831766639>",
+    "albino monkey": "<:albino:1110765280243748864>"
   },
 
-  "default_extra_turns": [
-    "violent monkey"
-  ],
+  "monkey_attributes": {
+    "basic monkey": {
+      "magic": false,
+      "magic_only": false,
+      "black": true,
+      "extra_turn": false
+    },
 
-  "magic_monkeys": [
-    "wizard monkey"
-  ],
+    "violent monkey": {
+      "magic": false,
+      "magic_only": false,
+      "black": true,
+      "extra_turn": true
+    },
 
-  "magic_only": [
-    "zombie monkey"
-  ]
+    "zombie monkey": {
+      "magic": false,
+      "magic_only": true,
+      "black": false,
+      "extra_turn": false
+    },
+
+    "wizard monkey": {
+      "magic": true,
+      "magic_only": false,
+      "black": true,
+      "extra_turn": false
+    },
+
+    "albino monkey": {
+      "magic": false,
+      "magic_only": false,
+      "black": false,
+      "extra_turn": false
+    }
+  }
 }

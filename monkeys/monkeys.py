@@ -3,30 +3,12 @@ import discord
 import database
 from visuals import monkie
 
+
 class monkeys:
-    def __init__(self, monkey):
+    def __init__(self, monkey, config):
+        self.config = config
         self.monkey = monkey
-        self.monkeys = {
-            "average monkey": {
-                "asset": "assets/basic.png",
-                "chance": (1, 40)
-            },
-
-            "wizard monkey": {
-                "asset": "assets/wizard.png",
-                "chance": (41, 70)
-            },
-
-            "violent monkey": {
-                "asset": "assets/violent.png",
-                "chance": (71, 90)
-            },
-
-            "zombie monkey": {
-                "asset": "assets/zombie.png",
-                "chance": (91, 100)
-            }
-        }
+        self.monkeys = config["monkeys"]
 
         self.ftm = {
             "assets/basic.png": "basic monkey",
@@ -36,7 +18,7 @@ class monkeys:
         }
 
     def random_monkey(self):
-        chance = random.randint(1, 100)
+        chance = random.randint(0, 100)
         for monkey in self.monkeys:
             smallest = self.monkeys[monkey]["chance"][0]
             largest = self.monkeys[monkey]["chance"][1]

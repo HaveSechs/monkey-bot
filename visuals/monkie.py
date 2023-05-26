@@ -49,7 +49,8 @@ class catch(discord.ui.View):
             database.set_pets(interaction.user.id, user["pets"] + [self.id])
             await interaction.response.edit_message(view=catchDisabled())
 
-            await interaction.channel.send(f"<@{interaction.user.id}> you enslaved it!!!")
+            monkey = database.get_monkey(self.id)
+            await interaction.channel.send(f"<@{interaction.user.id}> you enslaved it!!!\n\n`{self.id}` **{monkey['health']} :heart: {monkey['attack']} :dagger:**")
         else:
             await interaction.response.send_message("I was already enslaved!!!", ephemeral=True)
 
@@ -86,3 +87,32 @@ class petsDisplay(discord.ui.View):
             animal = database.get_monkey(monkey)
             embed.add_field(name=f"{animal['type']} ({animal['id']})", value=f":heart: {animal['health']} :dagger: {animal['attack']}", inline=False)
         return embed
+
+
+class tradeDisplay(discord.ui.View):
+    def __init__(self, user1, giving, user2, asking):
+        super().__init__()
+        self.user1 = user1
+        self.giving = giving
+        self.user2 = user2
+        self.asking = asking
+
+        print(giving, asking, user2, user1)
+
+    @discord.ui.button(label="yes", style=discord.ButtonStyle.green)
+    async def yes(self, interaction: discord.Interaction, item):
+        if interaction.user.id == self.user2:
+            print("done")
+            user1 = database.get_user(self.user1)
+            user2 = database.get_user(self.user2)
+            database.remove_from_deck_and_pets(self.user1, self.giving)
+            database.remove_from_deck_and_pets(self.user2, self.asking)
+
+            database.set_pets(self.user1, user1["pets"] + [self.asking])
+            database.set_pets(self.user2, user2["pets"] + [self.giving])
+            await interaction.response.edit_message(content="Trade done!")
+
+    @discord.ui.button(label="no", style=discord.ButtonStyle.red)
+    async def no(self, interaction: discord.Interaction, item):
+        if interaction.user.id == self.user2:
+            await interaction.response.edit_message(content="Declined", view=None)

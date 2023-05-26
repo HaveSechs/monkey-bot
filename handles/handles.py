@@ -10,7 +10,7 @@ from discord import app_commands
 
 class handles(commands.Cog):
     def __init__(self, monkey, config):
-        self.monkeys = monkeys.monkeys(monkey)
+        self.monkeys = monkeys.monkeys(monkey, config)
         self.monkey = monkey
         self.config = config
         self.invites = None
@@ -28,15 +28,15 @@ class handles(commands.Cog):
     async def on_message(self, message):
         if message.guild is not None:
             if message.guild.id not in self.cache:
-                self.cache[message.guild.id] = 0
+                self.cache[message.guild.id] = {"chance": 0, "time": 0}
 
-            if int(time.time()) - self.cache[message.guild.id] >= 120:
-                self.chance += 1
+            if int(time.time()) - self.cache[message.guild.id]["time"] >= 120:
+                self.cache[message.guild.id]["chance"] += 1
 
-                if random.randint(1, 100) <= self.chance:
+                if random.randint(1, 150) <= self.cache[message.guild.id]["chance"]:
                     await self.monkeys.spawn(message.channel.id)
-                    self.cache[message.guild.id] = int(time.time())
-                    self.chance = 0
+                    self.cache[message.guild.id]["time"] = int(time.time())
+                    self.cache[message.guild.id]["chance"] = 0
 
             if random.randint(self.config["random_message_range"][0], self.config["random_message_range"][1]) == 3:
                 await message.channel.send(random.choice(self.config["random_messages"]))
@@ -64,9 +64,9 @@ class handles(commands.Cog):
     async def on_message_delete(self, message):
         if message.author.id != self.monkey.user.id and len(message.content) != 0:
             content = re.sub("@everyone", "", message.content)
-            await message.channel.send(f"""\"{content}\"
+            await message.channel.send(f"""# \"{content}\"
     
--<@{message.author.id}>""")
+# -<@{message.author.id}>""")
 
 
 async def setup(monkey, config):

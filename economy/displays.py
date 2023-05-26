@@ -59,8 +59,10 @@ class displayEconomy(commands.Cog):
 
         for pet in user["pets"][:10]:
             info = database.get_monkey(pet)
-            print(info['id'], user["pets"])
-            embed.add_field(name=info["type"] + f" ({info['id']})", value=f":heart: {info['health']} :dagger: {info['attack']}", inline=False)
+            try:
+                embed.add_field(name=info["type"] + f" ({info['id']})", value=f":heart: {info['health']} :dagger: {info['attack']}", inline=False)
+            except:
+                pass
 
         pets = [[]]
         cnt = 0
@@ -121,9 +123,21 @@ class displayEconomy(commands.Cog):
         for monkey in user["deck"]:
             if monkey is not None:
                 real = database.get_monkey(monkey)
-                embed.add_field(name=real["type"], value=f":heart: {real['health']} :dagger: {real['attack']}", inline=True)
+                embed.add_field(name=f"{self.config['monkey_emojis'][real['type']]} ({monkey})", value=f":heart: {real['health']} :dagger: {real['attack']}", inline=True)
             else:
                 embed.add_field(name="Empty", value=":heart: 0 :dagger: 0", inline=True)
+
+        await interaction.response.send_message(embed=embed)
+
+    @app_commands.command(name="chances", description="create your own luck...")
+    async def chances(self, interaction: discord.Interaction):
+        ch = ""
+        for monkey in self.config["monkeys"]:
+            animal = self.config["monkeys"][monkey]
+            ch += f"`{monkey} - {(animal['chance'][1] - animal['chance'][0]) + 1}`\n"
+
+        embed = discord.Embed(title="Chances", color=0x336EFF)
+        embed.add_field(name="", value=ch)
 
         await interaction.response.send_message(embed=embed)
 

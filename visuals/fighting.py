@@ -4,10 +4,10 @@ import database
 
 
 class fight(discord.ui.View):
-    def __init__(self, user1: discord.User, user2: discord.User, config):
+    def __init__(self, turn: int, user1: discord.User, user2: discord.User, config):
         super().__init__()
         self.config = config
-        self.turn = random.choice([user1.id, user2.id])
+        self.turn = turn
         if self.turn == user1.id:
             self.next = user2.id
         else:
@@ -25,21 +25,31 @@ class fight(discord.ui.View):
         for monkey in range(len(self.deck1)):
             if self.deck1[monkey] is not None:
                 animal = database.get_monkey(self.deck1[monkey])
+                attributes = config["monkey_attributes"][animal["type"]]
                 self.cache[self.user1.id][monkey] = {
                     "health": animal["health"],
                     "attack": animal["attack"],
                     "type": animal["type"],
-                    "extra_turn": False
+
+                    "extra_turn": attributes["extra_turn"],
+                    "magic": attributes["magic"],
+                    "black": attributes["black"],
+                    "magic_only": attributes["magic_only"]
                 }
 
         for monkey in range(len(self.deck2)):
             if self.deck2[monkey] is not None:
-                animal = database.get_monkey(self.deck2[monkey])
+                animal = database.get_monkey(self.deck1[monkey])
+                attributes = config["monkey_attributes"][animal["type"]]
                 self.cache[self.user2.id][monkey] = {
                     "health": animal["health"],
                     "attack": animal["attack"],
                     "type": animal["type"],
-                    "extra_turn": False
+
+                    "extra_turn": attributes["extra_turn"],
+                    "magic": attributes["magic"],
+                    "black": attributes["black"],
+                    "magic_only": attributes["magic_only"]
                 }
 
     @discord.ui.button(label="1")
@@ -74,7 +84,7 @@ class fight(discord.ui.View):
                 self.cache[self.turn]["turns"].append(slot)
                 print(self.cache[self.turn])
                 damage = self.cache[self.turn][self.cache[self.turn]["turns"][-2]]["attack"]
-                self.remove_health(self.next, self.cache[self.turn]["turns"][-1], damage)
+                self.remove_health(self.cache[self.turn]["turns"][-1], self.cache[self.turn]["turns"][-2])
 
                 if len(self.cache[self.user1.id].keys()) - 1 == 0:
                     await interaction.response.edit_message(content=f"<@{self.user2.id}> won!!!", embed=None, view=None)
@@ -91,21 +101,27 @@ class fight(discord.ui.View):
             self.turn = current
         else:
             used = self.cache[self.turn]["turns"][-2]
-            if self.cache[self.turn][used]["type"] not in self.config["default_extra_turns"]:
+            if self.cache[self.turn][used]["extra_turn"] is True:
                 current = self.next
                 self.next = self.turn
                 self.turn = current
+                self.cache[self.turn]["turns"].append(used)
 
-    def remove_health(self, player, slot, amount, attacker_type):
+    def remove_health(self, victim: int, attacker: int):
         can = True
-        if self.cache[player][slot]["type"] in self.config["magic_only"]:
-            if attacker_type not in self.config["magic_monkeys"]:
-                can = False
+        mult = 1
+        # magic only
+        if self.cache[self.next][victim]["magic_only"] and not self.cache[self.turn][attacker]["magic"]:
+            can = False
+
+        # damage multipliers
+        if self.cache[self.next][victim]["black"] and self.cache[self.turn][attacker]["white"]:
+            mult = 10
 
         if can:
-            self.cache[player][slot]["health"] -= amount
-            if self.cache[player][slot]["health"] <= 0:
-                del self.cache[player][slot]
+            self.cache[self.next][victim]["health"] -= self.cache[self.turn][attacker]["attack"] * mult
+            if self.cache[self.next][victim]["health"] <= 0:
+                del self.cache[self.next][victim]
 
     def construct_embed(self):
         you = ""
