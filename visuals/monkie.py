@@ -65,10 +65,16 @@ class catchDisabled(discord.ui.View):
 
 
 class petsDisplay(discord.ui.View):
-    def __init__(self, pages: list):
+    def __init__(self, pages: list, user: discord.User):
         super().__init__()
         self.page = 0
         self.pages = pages
+        self.user = user
+
+        self.len_ = 0
+
+        for page in pages:
+            self.len_ += len(page)
 
     @discord.ui.button(label="<")
     async def back(self, interaction: discord.Interaction, item):
@@ -81,7 +87,7 @@ class petsDisplay(discord.ui.View):
         await interaction.response.edit_message(embed=self.construct_embed())
 
     def construct_embed(self):
-        embed = discord.Embed(title="Pets")
+        embed = discord.Embed(title=f"{self.user.name}'s Pets ({self.len_})")
         for monkey in self.pages[self.page]:
             print(monkey)
             animal = database.get_monkey(monkey)

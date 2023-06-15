@@ -8,7 +8,6 @@ class monkeys:
     def __init__(self, monkey, config):
         self.config = config
         self.monkey = monkey
-        self.monkeys = config["monkeys"]
 
         self.ftm = {
             "assets/basic.png": "basic monkey",
@@ -18,13 +17,7 @@ class monkeys:
         }
 
     def random_monkey(self):
-        chance = random.randint(0, 100)
-        for monkey in self.monkeys:
-            smallest = self.monkeys[monkey]["chance"][0]
-            largest = self.monkeys[monkey]["chance"][1]
-
-            if smallest <= chance <= largest:
-                return self.monkeys[monkey]["asset"]
+        return random.choices(self.config["chances"]["files"], weights=self.config["chances"]["weights"], k=1)[0]
 
     async def spawn(self, channel_id):
         monkey = self.random_monkey()

@@ -30,7 +30,7 @@ class handles(commands.Cog):
             if message.guild.id not in self.cache:
                 self.cache[message.guild.id] = {"chance": 0, "time": 0}
 
-            if int(time.time()) - self.cache[message.guild.id]["time"] >= 120:
+            if int(time.time()) - self.cache[message.guild.id]["time"] >= 200:
                 self.cache[message.guild.id]["chance"] += 1
 
                 if random.randint(1, 150) <= self.cache[message.guild.id]["chance"]:
