@@ -31,6 +31,9 @@
       "wizard monkey",
       "violent monkey",
       "zombie monkey",
+      "dj monkey",
+      "soldier monkey",
+      "gorilla",
       "albino monkey",
       "kkk monkey"
     ],
@@ -40,15 +43,21 @@
       "assets/wizard.png",
       "assets/violent.png",
       "assets/zombie.png",
+      "assets/dj.png",
+      "assets/soldier.png",
+      "assets/gorilla.png",
       "assets/albino.png",
       "assets/kkk.png"
     ],
 
     "weights": [
-      0.32,
-      0.32,
-      0.2,
-      0.1,
+      0.25,
+      0.25,
+      0.15,
+      0.08,
+      0.08,
+      0.08,
+      0.05,
       0.05,
       0.01
     ]
@@ -75,6 +84,21 @@
       "desc": "null"
     },
 
+    "dj monkey": {
+      "ability": "Party",
+      "desc": "Can stop any monkey from attacking for 5 rounds"
+    },
+
+    "soldier monkey": {
+      "ability": "Protect em at all costs",
+      "desc": "Does 10x damage to violent, zombie and kkk monkey but can't attack basic monkeys"
+    },
+
+    "gorilla": {
+      "ability": "null",
+      "desc": "null"
+    },
+
     "albino monkey": {
       "ability": "White supremacy",
       "desc": "Does x10 damage to black monkeys"
@@ -91,6 +115,9 @@
     "zombie monkey": "<:zombie:1109320017109078166>",
     "violent monkey": "<:violent:1109665256604717066>",
     "wizard monkey": "<:wizard:1109986416831766639>",
+    "dj monkey": "<:null:>",
+    "soldier monkey": "<:null:>",
+    "gorilla": "<:null:>",
     "albino monkey": "<:albino:1110765280243748864>",
     "kkk monkey": "<:kkk:1111760458777632800>"
   },
@@ -119,6 +146,27 @@
 
     "wizard monkey": {
       "magic": true,
+      "magic_only": false,
+      "black": true,
+      "extra_turn": false
+    },
+
+    "dj monkey": {
+      "magic": false,
+      "magic_only": false,
+      "black": true,
+      "extra_turn": false
+    },
+
+    "soldier monkey": {
+      "magic": false,
+      "magic_only": false,
+      "black": true,
+      "extra_turn": false
+    },
+
+    "gorilla": {
+      "magic": false,
       "magic_only": false,
       "black": true,
       "extra_turn": false
