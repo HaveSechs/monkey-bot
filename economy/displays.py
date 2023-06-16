@@ -62,7 +62,7 @@ class displayEconomy(commands.Cog):
             try:
                 embed.add_field(name=info["type"] + f" ({info['id']})", value=f":heart: {info['health']} :dagger: {info['attack']}", inline=False)
             except:
-                pass
+                print(pet)
 
         pets = [[]]
         cnt = 0
@@ -74,7 +74,7 @@ class displayEconomy(commands.Cog):
                 pets[cnt].append(user["pets"][pet])
         print(pets)
 
-        await interaction.response.send_message(embed=embed, view=visuals.monkie.petsDisplay(pets))
+        await interaction.response.send_message(embed=embed, view=visuals.monkie.petsDisplay(pets, interaction.user))
 
     @app_commands.command(name="view_pet", description="i have no pets :(")
     @app_commands.autocomplete(pet=utilities.autocomplete_id)
@@ -132,9 +132,9 @@ class displayEconomy(commands.Cog):
     @app_commands.command(name="chances", description="create your own luck...")
     async def chances(self, interaction: discord.Interaction):
         ch = ""
-        for monkey in self.config["monkeys"]:
-            animal = self.config["monkeys"][monkey]
-            ch += f"`{monkey} - {(animal['chance'][1] - animal['chance'][0]) + 1}`\n"
+        for pos in range(len(self.config["chances"]["type"])):
+            ch += f"`{self.config['chances']['type'][pos]} - {self.config['chances']['weights'][pos] * 100}`\n"
+        ch += f"`Total - {sum(self.config['chances']['weights']) * 100}`"
 
         embed = discord.Embed(title="Chances", color=0x336EFF)
         embed.add_field(name="", value=ch)

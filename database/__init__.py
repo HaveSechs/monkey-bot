@@ -22,7 +22,8 @@ def new_user(id: int, balance=0, daily=True):
         "balance": balance,
         "daily": daily,
         "inventory": {},
-        "pets": []
+        "pets": [],
+        "deck": [None, None, None, None, None]
     })
 
 
@@ -62,6 +63,26 @@ stats = {
     "zombie monkey": {
         "health": 50,
         "attack": 100
+    },
+    "dj monkey": {
+        "health": 100,
+        "attack": 100
+    },
+    "soldier monkey": {
+        "health": 125,
+        "attack": 125
+    },
+    "gorilla": {
+        "health": 1000,
+        "attack": 800
+    },
+    "albino monkey": {
+        "health": 200,
+        "attack": 200
+    },
+    "kkk monkey": {
+        "health": 100,
+        "attack": 200
     }
 }
 
@@ -95,3 +116,21 @@ def set_deck(id: int, slot: int, monkey: int):
     user = users.find_one({"id": id})
     user["deck"][slot] = monkey
     users.update_one({"id": id}, {"$set": {"deck": user["deck"]}})
+
+
+def delete_pet(id: int):
+    monkeys.delete_one({"id": id})
+
+
+def change_pet_stats(id: int, json_data):
+    monkeys.update_one({"id": id}, {"$set": json_data})
+
+
+def remove_from_deck_and_pets(id: int, pet: id):
+    user = get_user(id)
+    user["pets"].remove(pet)
+    if pet in user["deck"]:
+        user["deck"].remove(pet)
+
+    users.update_one({"id": id}, {"$set": {"deck": user["deck"]}})
+    users.update_one({"id": id}, {"$set": {"pets": user["pets"]}})
