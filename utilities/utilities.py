@@ -9,28 +9,23 @@ with open("config.json") as f:
 
 
 async def autocomplete_id(interaction: discord.Interaction, id: int):
-    print("ok")
     user = database.get_user(interaction.user.id)
 
     if user is None:
         database.new_user(interaction.user.id)
         user = database.get_user(interaction.user.id)
-    print("ok 2")
+
     choices = []
-    print("ok 3")
-    print(user)
 
     for id in user["pets"]:
-        print(type(id))
         monkey = database.get_monkey(id)
-        print(monkey)
 
-        name = f"{config['monkey_emojis'][monkey['type']]} {monkey['health']} :heart: {monkey['attack']} :dagger:"
+        name = f"{monkey['type']} 🐵 {monkey['health']} ❤️ {monkey['attack']} 🗡️"
 
         choices.append(
             app_commands.Choice(name=name, value=str(id))
         )
-    print(choices)
+
     return choices
 
 

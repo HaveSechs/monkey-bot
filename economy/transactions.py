@@ -1,16 +1,14 @@
 import time
 import asyncio
-from typing import Literal
 import random
 import discord
 import database
+from typing import Literal
 from discord.ext import commands
 from discord import app_commands
-from visuals import eco
-from visuals import monkie
-from visuals import fighting
+from visuals import eco, monkie, fighting
 from utilities.utilities import autocomplete_id
-import typing
+
 
 class transactions(commands.Cog):
     def __init__(self, monkey, config):
@@ -77,23 +75,6 @@ class transactions(commands.Cog):
         else:
             await interaction.response.send_message("cant count moment")
 
-    @app_commands.command(name="deck_set", description="guts")
-    @app_commands.autocomplete(id=autocomplete_id)
-    async def deck_set(self, interaction: discord.Interaction, id: str, slot: Literal[1, 2, 3, 4, 5]):
-        id = int(id)
-        user = database.get_user(interaction.user.id)
-
-        if user is None:
-            database.new_user(interaction.user.id)
-            user = database.get_user(interaction.user.id)
-
-        if id not in user["pets"]:
-            await interaction.response.send_message("non existent slave moment", ephemeral=True)
-        else:
-            if id not in user["deck"]:
-                database.set_deck(interaction.user.id, slot - 1, id)
-                await interaction.response.send_message("ok")
-
     @app_commands.command(name="fight", description="one")
     async def fight(self, interaction: discord.Interaction, user: discord.User):
         user1 = database.get_user(interaction.user.id)
@@ -137,7 +118,7 @@ class transactions(commands.Cog):
             await interaction.response.send_message(f"<@{turn}>'s turn", embed=embed, view=fighting.fight(turn, interaction.user, user, self.config))
 
     @app_commands.command(name="level_up", description="jaws morant")
-    # @app_commands.autocomplete(to_level=utilities.autocomplete_id, sacrifice=utilities.autocomplete_id)
+    @app_commands.autocomplete(to_level=autocomplete_id, sacrifice=autocomplete_id)
     async def level_up(self, interaction: discord.Interaction, to_level: str, sacrifice: str, stat: Literal["attack", "health"]):
         to_level = int(to_level)
         sacrifice = int(sacrifice)
@@ -159,7 +140,7 @@ class transactions(commands.Cog):
             await interaction.response.send_message('`to_level != sacrifice and to_level in user["pets"] and sacrifice in user["pets"] and pet1["type"] == pet2["type"]` make sure it fits this if statement')
 
     @app_commands.command(name="trade_monkey", description="slave trade")
-    # @app_commands.autocomplete(giving=utilities.autocomplete_id)
+    @app_commands.autocomplete(giving=autocomplete_id)
     async def trade(self, interaction: discord.Interaction, giving: str, asking_user: discord.User, asking: str):
         giving = int(giving)
         asking = int(asking)
@@ -181,6 +162,7 @@ class transactions(commands.Cog):
             await interaction.response.send_message(f"<@{asking_user.id}> would get {giving}\n<@{interaction.user.id}> would get {asking}", view=monkie.tradeDisplay(interaction.user.id, giving, asking_user.id, asking))
         else:
             print("fuck no")
+
 
 async def setup(monkey, config):
     await monkey.add_cog(transactions(monkey, config))

@@ -1,10 +1,9 @@
 import discord
 import database
+import visuals.monkie
 from discord.ext import commands
 from discord import app_commands
-from utilities.utilities import utilities
-
-import visuals.monkie
+from utilities.utilities import autocomplete_id
 
 
 class displayEconomy(commands.Cog):
@@ -76,22 +75,6 @@ class displayEconomy(commands.Cog):
 
         await interaction.response.send_message(embed=embed, view=visuals.monkie.petsDisplay(pets, interaction.user))
 
-    @app_commands.command(name="view_pet", description="i have no pets :(")
-    # @app_commands.autocomplete(pet=utilities.autocomplete_id)
-    async def view_pet(self, interaction: discord.Interaction, pet: str):
-        pet = int(pet)
-        pet = database.get_monkey(pet)
-        # card = visuals.monkie.draw_card(pet["type"], self.config["monkey_abilities"][pet["type"]]["ability"], self.config["monkey_abilities"][pet["type"]]["desc"], pet["health"], pet["attack"], f"assets/C{self.config['monkeys'][pet['type']]['asset'].split('/')[1]}")
-        # await interaction.response.send_message(file=card)
-
-        # TODO: make it an image
-        embed = discord.Embed(title=f"{pet['type']} ({pet['id']})")
-        embed.add_field(name=f"Ability: {self.config['monkey_abilities'][pet['type']]['ability']}", value=self.config['monkey_abilities'][pet['type']]['desc'], inline=False)
-        embed.add_field(name=f"Health: ", value=f":heart: {pet['health']}")
-        embed.add_field(name=f"Attack: ", value=f":dagger: {pet['attack']}")
-
-        await interaction.response.send_message(embed=embed)
-
     @app_commands.command(name="shop", description="look at all the things you can't afford")
     async def shop(self, interaction: discord.Interaction):
         embed = discord.Embed(title="Shop", color=0x336EFF)
@@ -109,25 +92,6 @@ class displayEconomy(commands.Cog):
 
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name="deck", description="show us ur zoo")
-    async def deck(self, interaction: discord.Interaction, who: discord.User = None):
-        if who is None:
-            who = interaction.user.id
-
-        user = database.get_user(interaction.user.id)
-        if user is None:
-            database.new_user(who)
-            user = database.get_user(who)
-
-        embed = discord.Embed(title="Deck", color=0x336EFF)
-        for monkey in user["deck"]:
-            if monkey is not None:
-                real = database.get_monkey(monkey)
-                embed.add_field(name=f"{self.config['monkey_emojis'][real['type']]} ({monkey})", value=f":heart: {real['health']} :dagger: {real['attack']}", inline=True)
-            else:
-                embed.add_field(name="Empty", value=":heart: 0 :dagger: 0", inline=True)
-
-        await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="chances", description="create your own luck...")
     async def chances(self, interaction: discord.Interaction):

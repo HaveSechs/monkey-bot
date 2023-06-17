@@ -7,27 +7,28 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 def draw_card(name, ability, desc, health, attack, file):
-    monkey = Image.open(file).resize((350, 274))
-    img = Image.new('RGBA', (500, 750), color='white')
+    monkey = Image.open(file).resize((350, 274)).convert("RGBA")
+    img = Image.new("RGBA", (500, 750), color='blue')
 
     paste_x = (img.width - monkey.width) // 2
     img.paste(monkey, (paste_x, 0))
 
     draw = ImageDraw.Draw(img)
 
-    font_32 = ImageFont.truetype("assets/bobby-jones-soft.otf", size=32)
-    font_24 = ImageFont.truetype("assets/bobby-jones-soft.otf", size=24)
+    font_48 = ImageFont.truetype("C:\\Users\\ianso\\monkeyBot\\monkey-bot\\assets\\bobby-jones-soft.otf", size=48)
+    font_32 = ImageFont.truetype("C:\\Users\\ianso\\monkeyBot\\monkey-bot\\assets\\bobby-jones-soft.otf", size=32)
+    font_24 = ImageFont.truetype("C:\\Users\\ianso\\monkeyBot\\monkey-bot\\assets\\bobby-jones-soft.otf", size=24)
     center_x = img.width // 2
 
-    draw.text((center_x - draw.textsize(name, font=font_32)[0] // 2, 300), name, fill='black', font=font_32)
-    draw.text((center_x - draw.textsize(ability, font=font_32)[0] // 2, 350), ability, fill='black', font=font_32)
-    draw.text((center_x - draw.textsize(desc, font=font_24)[0] // 2, 380), desc, fill='black', font=font_24)
+    draw.text((center_x - draw.textsize(name, font=font_48)[0] // 2, 300), name, fill='white', font=font_48)
+    draw.text((center_x - draw.textsize(ability, font=font_32)[0] // 2, 350), ability, fill='white', font=font_32)
+    draw.text((center_x - draw.textsize(desc, font=font_24)[0] // 2, 380), desc, fill='white', font=font_24)
 
     bytes = BytesIO()
     img.save(bytes, format="PNG")
     bytes.seek(0)
 
-    return discord.File(bytes)
+    return discord.File(bytes, filename="monkey.png")
 
 
 class catch(discord.ui.View):

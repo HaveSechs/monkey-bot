@@ -1,13 +1,12 @@
 import os
 import json
 import discord
-from discord.ext import commands
-
-from economy import displays
 from handles import handles
-from economy import transactions
 from utilities import utilities
 from dotenv import dotenv_values
+from discord.ext import commands
+from economy import displays, transactions, monkeys
+
 
 vals = dotenv_values(".env")
 
@@ -25,6 +24,7 @@ async def on_ready():
     await handles.setup(monkey, config)
     await transactions.setup(monkey, config)
     await utilities.setup(monkey, config)
+    await monkeys.setup(monkey, config)
     await monkey.tree.sync()
     print("""Cercopithecidae
     .-"-. 
