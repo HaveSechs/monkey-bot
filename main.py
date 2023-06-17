@@ -1,3 +1,4 @@
+import os
 import json
 import discord
 from discord.ext import commands
@@ -6,13 +7,15 @@ from economy import displays
 from handles import handles
 from economy import transactions
 from utilities import utilities
+from dotenv import dotenv_values
+
+vals = dotenv_values(".env")
+
 
 with open("config.json", "r") as f:
     config = json.load(f)
 
 monkey = commands.Bot(intents=discord.Intents.all(), command_prefix="%")
-
-# displays.setup(monkey)
 
 
 @monkey.event
@@ -33,4 +36,4 @@ async def on_ready():
   /       \\""")
 
 
-monkey.run("")
+monkey.run(vals["TOKEN"])

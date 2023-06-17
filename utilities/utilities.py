@@ -1,25 +1,43 @@
+import json
 import discord
+import database
 from discord.ext import commands
 from discord import app_commands
 
-import database
+with open("config.json") as f:
+    config = json.load(f)
+
+
+async def autocomplete_id(interaction: discord.Interaction, id: int):
+    print("ok")
+    user = database.get_user(interaction.user.id)
+
+    if user is None:
+        database.new_user(interaction.user.id)
+        user = database.get_user(interaction.user.id)
+    print("ok 2")
+    choices = []
+    print("ok 3")
+    print(user)
+
+    for id in user["pets"]:
+        print(type(id))
+        monkey = database.get_monkey(id)
+        print(monkey)
+
+        name = f"{config['monkey_emojis'][monkey['type']]} {monkey['health']} :heart: {monkey['attack']} :dagger:"
+
+        choices.append(
+            app_commands.Choice(name=name, value=str(id))
+        )
+    print(choices)
+    return choices
 
 
 class utilities(commands.Cog):
     def __init__(self, monkey, config):
         self.monkey = monkey
         self.config = config
-
-    async def autocomplete_id(self, interaction: discord.Interaction, id: int):
-        user = database.get_user(interaction.user.id)
-
-        if user is None:
-            database.new_user(interaction.user.id)
-            user = database.get_user(interaction.user.id)
-        return [
-            app_commands.Choice(name=monkey, value=monkey)
-            for monkey in user["pets"] if str(id) in str(monkey)
-        ]
 
     @app_commands.command(name="suggest", description="random")
     async def suggest(self, interaction: discord.Interaction, sentence: str):

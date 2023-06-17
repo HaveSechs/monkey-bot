@@ -1,16 +1,16 @@
 import time
 import asyncio
 from typing import Literal
-
 import random
 import discord
 import database
 from discord.ext import commands
 from discord import app_commands
-from utilities.utilities import utilities
 from visuals import eco
 from visuals import monkie
 from visuals import fighting
+from utilities.utilities import autocomplete_id
+import typing
 
 class transactions(commands.Cog):
     def __init__(self, monkey, config):
@@ -78,7 +78,7 @@ class transactions(commands.Cog):
             await interaction.response.send_message("cant count moment")
 
     @app_commands.command(name="deck_set", description="guts")
-    @app_commands.autocomplete(id=utilities.autocomplete_id)
+    @app_commands.autocomplete(id=autocomplete_id)
     async def deck_set(self, interaction: discord.Interaction, id: str, slot: Literal[1, 2, 3, 4, 5]):
         id = int(id)
         user = database.get_user(interaction.user.id)
@@ -137,7 +137,7 @@ class transactions(commands.Cog):
             await interaction.response.send_message(f"<@{turn}>'s turn", embed=embed, view=fighting.fight(turn, interaction.user, user, self.config))
 
     @app_commands.command(name="level_up", description="jaws morant")
-    @app_commands.autocomplete(to_level=utilities.autocomplete_id, sacrifice=utilities.autocomplete_id)
+    # @app_commands.autocomplete(to_level=utilities.autocomplete_id, sacrifice=utilities.autocomplete_id)
     async def level_up(self, interaction: discord.Interaction, to_level: str, sacrifice: str, stat: Literal["attack", "health"]):
         to_level = int(to_level)
         sacrifice = int(sacrifice)
@@ -159,7 +159,7 @@ class transactions(commands.Cog):
             await interaction.response.send_message('`to_level != sacrifice and to_level in user["pets"] and sacrifice in user["pets"] and pet1["type"] == pet2["type"]` make sure it fits this if statement')
 
     @app_commands.command(name="trade_monkey", description="slave trade")
-    @app_commands.autocomplete(giving=utilities.autocomplete_id)
+    # @app_commands.autocomplete(giving=utilities.autocomplete_id)
     async def trade(self, interaction: discord.Interaction, giving: str, asking_user: discord.User, asking: str):
         giving = int(giving)
         asking = int(asking)

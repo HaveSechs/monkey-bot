@@ -77,7 +77,7 @@ class displayEconomy(commands.Cog):
         await interaction.response.send_message(embed=embed, view=visuals.monkie.petsDisplay(pets, interaction.user))
 
     @app_commands.command(name="view_pet", description="i have no pets :(")
-    @app_commands.autocomplete(pet=utilities.autocomplete_id)
+    # @app_commands.autocomplete(pet=utilities.autocomplete_id)
     async def view_pet(self, interaction: discord.Interaction, pet: str):
         pet = int(pet)
         pet = database.get_monkey(pet)

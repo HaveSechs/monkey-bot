@@ -1,8 +1,10 @@
 import time
 import random
+from dotenv import dotenv_values
 from pymongo.mongo_client import MongoClient
 
-location = ""
+vals = dotenv_values(".env")
+location = vals["MONGO"]
 
 client = MongoClient(location)
 database = client["Monkey"]
