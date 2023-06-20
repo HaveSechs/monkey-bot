@@ -20,46 +20,36 @@
 
   "random_message_range": [1, 10],
   "random_messages": [
-    "# :warning: **remember we do not tolerate racism in this server**",
     "# :warning: **remember we do not tolerate pedophilia in this server**",
     "# **proud supporters of discord's tos**"
   ],
 
   "chances": {
-    "type": [
-      "average monkey",
-      "wizard monkey",
-      "violent monkey",
-      "zombie monkey",
-      "dj monkey",
-      "soldier monkey",
-      "gorilla",
-      "albino monkey",
-      "kkk monkey"
-    ],
-
+    "monkeys": {
+      "average monkey":0.17,
+      "wizard monkey": 0.17,
+      "girl monkey": 0.17,
+      "violent monkey": 0.10,
+      "zombie monkey": 0.07,
+      "dj monkey": 0.07,
+      "soldier monkey": 0.07,
+      "ninja monkey": 0.07,
+      "albino monkey": 0.05,
+      "gorilla": 0.05,
+      "kkk monkey": 0.01
+    },
     "files": [
       "assets/average.png",
       "assets/wizard.png",
+      "assets/girl.png",
       "assets/violent.png",
       "assets/zombie.png",
       "assets/dj.png",
       "assets/soldier.png",
-      "assets/gorilla.png",
+      "assets/ninja.png",
       "assets/albino.png",
+      "assets/gorilla.png",
       "assets/kkk.png"
-    ],
-
-    "weights": [
-      0.25,
-      0.25,
-      0.15,
-      0.08,
-      0.08,
-      0.08,
-      0.05,
-      0.05,
-      0.01
     ]
   },
 
@@ -82,6 +72,16 @@
     "wizard monkey": {
       "ability": "null",
       "desc": "null"
+    },
+
+    "girl monkey": {
+      "ability": "Girl power!",
+      "desc": "Does 2x damage always"
+    },
+
+    "ninja monkey": {
+      "ability": "Stealth",
+      "desc": "Has a 30% chance of dodging all attacks"
     },
 
     "dj monkey": {

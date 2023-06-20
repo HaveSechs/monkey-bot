@@ -7,11 +7,15 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 def draw_card(name, ability, desc, health, attack, file):
-    monkey = Image.open(file).resize((350, 274)).convert("RGBA")
+    background = Image.open("assets/background.png")
+    monkey = Image.open(file).resize(background.size).convert("RGBA")
+
+    # background.paste(monkey)
+
     img = Image.new("RGBA", (500, 750), color='blue')
 
     paste_x = (img.width - monkey.width) // 2
-    img.paste(monkey, (paste_x, 0))
+    img.paste(background, (paste_x, 0))
 
     draw = ImageDraw.Draw(img)
 

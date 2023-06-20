@@ -36,7 +36,6 @@ class transactions(commands.Cog):
                 await interaction.response.send_message("does 24 hours equal 2 seconds?", view=eco.dailyVisual(interaction.user.id))
 
     @app_commands.command(name="buy", description="robux robux time !!!!")
-    @app_commands.describe(item="you are brokie")
     async def buy(self, interaction: discord.Interaction, item: Literal["100 robux"], amount: int = 1):
         user = database.get_user(interaction.user.id)
         if user is None:
@@ -54,7 +53,6 @@ class transactions(commands.Cog):
             await interaction.response.send_message("no money no shit")
 
     @app_commands.command(name="sell", description="selling black people")
-    @app_commands.describe(item="black person")
     async def sell(self, interaction: discord.Interaction, item: Literal["100 robux"], amount: int = 1):
         user = database.get_user(interaction.user.id)
 
@@ -116,28 +114,6 @@ class transactions(commands.Cog):
             embed.add_field(name=f"{interaction.user.name}", value=f"{you}")
             embed.add_field(name=f"{user.name}", value=f"{opp}", inline=False)
             await interaction.response.send_message(f"<@{turn}>'s turn", embed=embed, view=fighting.fight(turn, interaction.user, user, self.config))
-
-    @app_commands.command(name="level_up", description="jaws morant")
-    @app_commands.autocomplete(to_level=autocomplete_id, sacrifice=autocomplete_id)
-    async def level_up(self, interaction: discord.Interaction, to_level: str, sacrifice: str, stat: Literal["attack", "health"]):
-        to_level = int(to_level)
-        sacrifice = int(sacrifice)
-
-        pet1 = database.get_monkey(to_level)
-        pet2 = database.get_monkey(sacrifice)
-
-        user = database.get_user(interaction.user.id)
-        if user is None:
-            database.new_user(interaction.user.id)
-            database.get_user(interaction.user.id)
-
-        if to_level != sacrifice and to_level in user["pets"] and sacrifice in user["pets"] and pet1["type"] == pet2["type"]:
-            database.delete_pet(sacrifice)
-            database.remove_from_deck_and_pets(interaction.user.id, sacrifice)
-            database.change_pet_stats(to_level, {stat: pet1[stat] + 1})
-            await interaction.response.send_message("done")
-        else:
-            await interaction.response.send_message('`to_level != sacrifice and to_level in user["pets"] and sacrifice in user["pets"] and pet1["type"] == pet2["type"]` make sure it fits this if statement')
 
     @app_commands.command(name="trade_monkey", description="slave trade")
     @app_commands.autocomplete(giving=autocomplete_id)

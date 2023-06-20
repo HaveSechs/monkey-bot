@@ -17,7 +17,7 @@ class monkeys:
         }
 
     def random_monkey(self):
-        return random.choices(self.config["chances"]["files"], weights=self.config["chances"]["weights"], k=1)[0]
+        return random.choices(self.config["chances"]["files"], weights=list(self.config["chances"]["monkeys"].values()), k=1)[0]
 
     async def spawn(self, channel_id):
         monkey = self.random_monkey()

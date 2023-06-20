@@ -58,6 +58,10 @@ stats = {
         "health": 100,
         "attack": 75
     },
+    "girl monkey": {
+        "health": 75,
+        "attack": 75
+    },
     "violent monkey": {
         "health": 100,
         "attack": 125
@@ -73,6 +77,10 @@ stats = {
     "soldier monkey": {
         "health": 125,
         "attack": 125
+    },
+    "ninja monkey": {
+        "health": 100,
+        "attack": 150
     },
     "gorilla": {
         "health": 1000,

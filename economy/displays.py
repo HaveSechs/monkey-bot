@@ -92,13 +92,12 @@ class displayEconomy(commands.Cog):
 
         await interaction.response.send_message(embed=embed)
 
-
     @app_commands.command(name="chances", description="create your own luck...")
     async def chances(self, interaction: discord.Interaction):
         ch = ""
-        for pos in range(len(self.config["chances"]["type"])):
-            ch += f"`{self.config['chances']['type'][pos]} - {self.config['chances']['weights'][pos] * 100}`\n"
-        ch += f"`Total - {sum(self.config['chances']['weights']) * 100}`"
+        for monkey in self.config["chances"]["monkeys"]:
+            ch += f"`{monkey} - {self.config['chances']['monkeys'][monkey] * 100}`\n"
+        ch += f"`{sum(list(self.config['chances']['monkeys'].values())) * 100}`"
 
         embed = discord.Embed(title="Chances", color=0x336EFF)
         embed.add_field(name="", value=ch)

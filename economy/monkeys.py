@@ -14,6 +14,7 @@ class monkeys(commands.Cog):
 
     view = app_commands.Group(name="view", description="idk")
     deck = app_commands.Group(name="deck", description="idk")
+    level = app_commands.Group(name="level", description="idk")
 
     @view.command(name="pet", description="view your slave")
     @app_commands.autocomplete(pet=autocomplete_id)
@@ -59,6 +60,28 @@ class monkeys(commands.Cog):
             if id not in user["deck"]:
                 database.set_deck(interaction.user.id, slot - 1, id)
                 await interaction.response.send_message("ok")
+
+    @level.command(name="up", description="jaws morant")
+    @app_commands.autocomplete(to_level=autocomplete_id, sacrifice=autocomplete_id)
+    async def level_up(self, interaction: discord.Interaction, to_level: str, sacrifice: str, stat: Literal["attack", "health"]):
+        to_level = int(to_level)
+        sacrifice = int(sacrifice)
+
+        pet1 = database.get_monkey(to_level)
+        pet2 = database.get_monkey(sacrifice)
+
+        user = database.get_user(interaction.user.id)
+        if user is None:
+            database.new_user(interaction.user.id)
+            database.get_user(interaction.user.id)
+
+        if to_level != sacrifice and to_level in user["pets"] and sacrifice in user["pets"] and pet1["type"] == pet2["type"]:
+            database.delete_pet(sacrifice)
+            database.remove_from_deck_and_pets(interaction.user.id, sacrifice)
+            database.change_pet_stats(to_level, {stat: pet1[stat] + 1})
+            await interaction.response.send_message("done")
+        else:
+            await interaction.response.send_message('`to_level != sacrifice and to_level in user["pets"] and sacrifice in user["pets"] and pet1["type"] == pet2["type"]` make sure it fits this if statement')
 
 
 async def setup(monkey, config):
