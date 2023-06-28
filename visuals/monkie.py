@@ -55,6 +55,11 @@ class catch(discord.ui.View):
             await interaction.response.edit_message(view=catchDisabled())
 
             monkey = database.get_monkey(self.id)
+
+            for quest in user["quests"]:
+                if quest[0] == 0:
+                    database.update_quest(interaction.user.id, 0, 1)
+
             await interaction.channel.send(f"<@{interaction.user.id}> you enslaved it!!!\n\n`{self.id}` **{monkey['health']} :heart: {monkey['attack']} :dagger:**")
         else:
             await interaction.response.send_message("I was already enslaved!!!", ephemeral=True)
@@ -127,3 +132,25 @@ class tradeDisplay(discord.ui.View):
     async def no(self, interaction: discord.Interaction, item):
         if interaction.user.id == self.user2:
             await interaction.response.edit_message(content="Declined", view=None)
+
+
+class claimQuests(discord.ui.View):
+    def __init__(self, id: int, config: dict):
+        self.id = id
+        self.config = config
+        super().__init__()
+
+    @discord.ui.button(label="claim", style=discord.ButtonStyle.green)
+    async def claim(self, interaction: discord.Interaction, item):
+        if interaction.user.id == self.id:
+            user = database.get_user(self.id)
+
+            for quest in user["quests"]:
+                quest_data = self.config["quests"][quest[0]]
+
+                if quest[1] >= quest_data["total"]:
+                    if "money" in quest["rewards"]:
+                        database.set_money(self.id, user["balance"] + quest["rewards"]["money"])
+                    if "monkey" in quest["rewards"]:
+                        monkey_id = database.new_monkey(quest["rewards"]["monkey"])
+                        database.set_pets(self.id, user["pets"] + [monkey_id])

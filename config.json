@@ -5,7 +5,11 @@
   "items": {
     "100 robux": {
       "description": "AHHH I USED THE WRONG ACCOUNT",
-      "sell_value": 360
+      "sell_value": 3600
+    },
+    "flag": {
+      "description": "Boosts all monkeys damage by 3%",
+      "sell_value": 1000
     }
   },
   "shop": {
@@ -26,20 +30,21 @@
 
   "chances": {
     "monkeys": {
-      "average monkey":0.17,
-      "wizard monkey": 0.17,
-      "girl monkey": 0.17,
-      "violent monkey": 0.10,
-      "zombie monkey": 0.07,
-      "dj monkey": 0.07,
-      "soldier monkey": 0.07,
-      "ninja monkey": 0.07,
+      "basic monkey":0.15,
+      "wizard monkey": 0.15,
+      "girl monkey": 0.15,
+      "violent monkey": 0.08,
+      "zombie monkey": 0.08,
+      "dj monkey": 0.08,
+      "soldier monkey": 0.08,
+      "ninja monkey": 0.08,
+      "cyborg monkey": 0.08,
       "albino monkey": 0.05,
-      "gorilla": 0.05,
+      "gorilla": 0.01,
       "kkk monkey": 0.01
     },
     "files": [
-      "assets/average.png",
+      "assets/basic.png",
       "assets/wizard.png",
       "assets/girl.png",
       "assets/violent.png",
@@ -47,6 +52,7 @@
       "assets/dj.png",
       "assets/soldier.png",
       "assets/ninja.png",
+      "assets/cyborg.png",
       "assets/albino.png",
       "assets/gorilla.png",
       "assets/kkk.png"
@@ -99,6 +105,11 @@
       "desc": "null"
     },
 
+    "cyborg monkey": {
+      "ability": "Mechanical",
+      "desc": "Immune to magic attacks"
+    },
+
     "albino monkey": {
       "ability": "White supremacy",
       "desc": "Does x10 damage to black monkeys"
@@ -113,10 +124,13 @@
   "monkey_emojis": {
     "basic monkey": "<:basic:1109319031044984915>",
     "zombie monkey": "<:zombie:1109320017109078166>",
+    "girl monkey": "<:null:>",
     "violent monkey": "<:violent:1109665256604717066>",
     "wizard monkey": "<:wizard:1109986416831766639>",
     "dj monkey": "<:null:>",
     "soldier monkey": "<:null:>",
+    "ninja monkey": "<:null:>",
+    "cyborg monkey": "<:null:>",
     "gorilla": "<:null:>",
     "albino monkey": "<:albino:1110765280243748864>",
     "kkk monkey": "<:kkk:1111760458777632800>"
@@ -127,63 +141,102 @@
       "magic": false,
       "magic_only": false,
       "black": true,
-      "extra_turn": false
+      "extra_turn": false,
+      "disabled": false
+    },
+
+    "girl monkey": {
+      "magic": false,
+      "magic_only": false,
+      "black": true,
+      "extra_turn": false,
+      "disabled": false
     },
 
     "violent monkey": {
       "magic": false,
       "magic_only": false,
       "black": true,
-      "extra_turn": true
+      "extra_turn": true,
+      "disabled": false
     },
 
     "zombie monkey": {
       "magic": false,
       "magic_only": true,
       "black": false,
-      "extra_turn": false
+      "extra_turn": false,
+      "disabled": false
     },
 
     "wizard monkey": {
       "magic": true,
       "magic_only": false,
       "black": true,
-      "extra_turn": false
+      "extra_turn": false,
+      "disabled": false
     },
 
     "dj monkey": {
       "magic": false,
       "magic_only": false,
       "black": true,
-      "extra_turn": false
+      "extra_turn": false,
+      "disabled": false
     },
 
     "soldier monkey": {
       "magic": false,
       "magic_only": false,
       "black": true,
-      "extra_turn": false
+      "extra_turn": false,
+      "disabled": false
+    },
+
+    "ninja monkey": {
+      "magic": false,
+      "magic_only": false,
+      "black": true,
+      "extra_turn": false,
+      "disabled": false
+    },
+
+    "cyborg monkey": {
+      "magic": false,
+      "magic_only": false,
+      "black": true,
+      "extra_turn": false,
+      "disabled": false
     },
 
     "gorilla": {
       "magic": false,
       "magic_only": false,
       "black": true,
-      "extra_turn": false
+      "extra_turn": false,
+      "disabled": false
     },
 
     "albino monkey": {
       "magic": false,
       "magic_only": false,
       "black": false,
-      "extra_turn": false
+      "extra_turn": false,
+      "disabled": false
     },
 
     "kkk monkey": {
       "magic": true,
       "magic_only": false,
       "black": false,
-      "extra_turn": false
+      "extra_turn": false,
+      "disabled": false
     }
-  }
+  },
+
+  "quests": [
+    {"desc": "Collect 5 monkeys", "total": 5, "rewards": {"monkey": "ninja monkey"}},
+    {"desc": "Send 100 messages", "total": 100, "rewards": {"money": 1000}},
+    {"desc": "Join a clan", "total": 1, "rewards": {"items": [{"item": "flag", "amount": 1}]}}
+  ]
 }

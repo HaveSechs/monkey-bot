@@ -71,7 +71,6 @@ class displayEconomy(commands.Cog):
                 cnt += 1
             else:
                 pets[cnt].append(user["pets"][pet])
-        print(pets)
 
         await interaction.response.send_message(embed=embed, view=visuals.monkie.petsDisplay(pets, interaction.user))
 
@@ -103,6 +102,28 @@ class displayEconomy(commands.Cog):
         embed.add_field(name="", value=ch)
 
         await interaction.response.send_message(embed=embed)
+
+    @app_commands.command(name="quests", description="view your epik journey")
+    async def quests(self, interaction: discord.Interaction):
+        user = database.get_user(interaction.user.id)
+        if user is None:
+            database.new_user(interaction.user.id)
+            user = database.get_user(interaction.user.id)
+
+        embed = discord.Embed(title="Quests", color=0x00ff99)
+
+        for quest in user["quests"]:
+            reward = ""
+            rewards = self.config['quests'][quest[0]]['rewards']
+            if "money" in rewards:
+                reward += f":monkey:{rewards['money']}"
+            if "monkey" in rewards:
+                reward += f"{self.config['monkey_emojis'][rewards['monkey']]}"
+            if "item" in rewards:
+                reward += f"{rewards['items']}"
+            embed.add_field(name=self.config['quests'][quest[0]]['desc'], value=f"Rewards: {reward} {quest[1]}/{self.config['quests'][quest[0]]['total']}", inline=False)
+
+        await interaction.response.send_message(embed=embed, view=visuals.monkie.claimQuests(interaction.user.id, self.config))
 
 
 async def setup(monkey, config):

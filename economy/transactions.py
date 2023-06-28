@@ -47,7 +47,7 @@ class transactions(commands.Cog):
             try:
                 user["inventory"][item]["amount"] += amount
             except:
-                user["inventory"][item]["amount"] = amount
+                user["inventory"][item] = {"amount": amount}
             database.set_inventory(interaction.user.id, user["inventory"])
         else:
             await interaction.response.send_message("no money no shit")
@@ -88,32 +88,7 @@ class transactions(commands.Cog):
         if user1["deck"].count(None) == 5 or user2["deck"].count(None) == 5:
             await interaction.response.send_message("one of you guys has no slaves")
         else:
-
-            you = ""
-            opp = ""
-
-            cnt = 1
-
-            for monkey in user1["deck"]:
-                if monkey is not None:
-                    animal = database.get_monkey(monkey)
-                    you += f"({cnt}) {self.config['monkey_emojis'][animal['type']]} **{animal['health']} :heart: {animal['attack']} :dagger:**\n"
-                    cnt += 1
-
-            cnt = 1
-
-            for monkey in user2["deck"]:
-                if monkey is not None:
-                    animal = database.get_monkey(monkey)
-                    opp += f"({cnt}) {self.config['monkey_emojis'][animal['type']]} **{animal['health']} :heart: {animal['attack']} :dagger:**\n"
-                    cnt += 1
-
-            turn = random.choice([interaction.user.id, user.id])
-
-            embed = discord.Embed(title="Battle")
-            embed.add_field(name=f"{interaction.user.name}", value=f"{you}")
-            embed.add_field(name=f"{user.name}", value=f"{opp}", inline=False)
-            await interaction.response.send_message(f"<@{turn}>'s turn", embed=embed, view=fighting.fight(turn, interaction.user, user, self.config))
+            await interaction.response.send_message("ok", view=fighting.fight(interaction.user, user, self.config))
 
     @app_commands.command(name="trade_monkey", description="slave trade")
     @app_commands.autocomplete(giving=autocomplete_id)

@@ -1,14 +1,9 @@
-import re
-import time
-import asyncio
 import random
-import discord
 import database
 import threading
-from utilities import utilities
+from utilities.utilities import *
 from monkeys import monkeys
 from discord.ext import commands
-from discord import app_commands
 
 
 class handles(commands.Cog):
@@ -44,7 +39,7 @@ class handles(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.guild is not None and not message.author.bot and len(message.content) > 1:
-            threading.Thread(target=utilities.is_racist, args=(message, self.queue)).start()
+            # threading.Thread(target=utilities.is_racist, args=(message, self.queue)).start()
             if message.guild.id not in self.cache:
                 self.cache[message.guild.id] = {"chance": 0, "time": 0}
 
@@ -56,26 +51,10 @@ class handles(commands.Cog):
                     self.cache[message.guild.id]["time"] = int(time.time())
                     self.cache[message.guild.id]["chance"] = 0
 
-            if random.randint(self.config["random_message_range"][0], self.config["random_message_range"][1]) == 3:
-                await message.channel.send(random.choice(self.config["random_messages"]))
-
-            amount = random.randint(self.config["message_range"][0], self.config["message_range"][1]) * self.config["message_multiplier"]
-
-            user = database.get_user(message.author.id)
-            if user is None:
-                database.new_user(message.author.id)
-                user = database.get_user(message.author.id)
-
-            database.set_money(message.author.id, user["balance"] + amount)
-
-        if message.author.id == 302050872383242240:
-            if message.embeds[0].to_dict()["description"].startswith("Bump done!"):
-                user = database.get_user(message.interaction.user.id)
-                if user is None:
-                    database.new_user(message.author.id, 500)
-                else:
-                    database.set_money(message.interaction.user.id, user["balance"] + 500)
-                await message.channel.send("Added 500!")
+            await do_quests(message)
+            await random_message(message)
+            await message_rewards(message)
+            await handle_disboard(message)
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):

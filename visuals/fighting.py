@@ -4,127 +4,106 @@ import database
 
 
 class fight(discord.ui.View):
-    def __init__(self, turn: int, user1: discord.User, user2: discord.User, config):
+    def __init__(self, user1, user2, config):
         super().__init__()
+
+        user1_info = database.get_user(user1.id)
+        user2_info = database.get_user(user2.id)
+
+        self.user1 = user1
+        self.user2 = user2
+
         self.config = config
-        self.special = False
-
-        self.turn = turn
-
-        if user1.id == self.turn:
-            self.next = user2.id
-        else:
-            self.next = user1.id
 
         self.cache = {
-            user1.id: {"turns": []},
-            user2.id: {"turns": []}
+            user1.id: {
+                "started": None, # will do later
+                "turns": [],
+                "deck": self.load_deck(user1_info["deck"]),
+            },
+            user2.id: {
+                "started": None, # will do later
+                "turns": [],
+                "deck": self.load_deck(user2_info["deck"])
+            }
         }
-
-        deck = database.get_user(user1.id)["deck"]
-        for id, pos in enumerate(deck):
-            monkey = database.get_monkey(id)
-            attributes = self.config["monkey_attributes"][monkey["type"]]
-            self.cache[user1.id][pos] = {
-                "type": monkey["type"],
-                "attack": monkey["attack"],
-                "health": monkey["health"],
-
-                "magic": attributes["magic"],
-                "magic_only": attributes["magic_only"],
-                "black": attributes["black"],
-                "extra_turn": attributes["extra_turn"]
-            }
-
-        deck = database.get_user(user2.id)["deck"]
-        for id, pos in enumerate(deck):
-            monkey = database.get_monkey(id)
-            attributes = self.config["monkey_attributes"][monkey["type"]]
-            self.cache[user2.id][pos] = {
-                "type": monkey["type"],
-                "attack": monkey["attack"],
-                "health": monkey["health"],
-
-                "magic": attributes["magic"],
-                "magic_only": attributes["magic_only"],
-                "black": attributes["black"],
-                "extra_turn": attributes["extra_turn"]
-            }
 
     @discord.ui.button(label="1")
     async def one(self, interaction: discord.Interaction, item):
-        await self.attack(interaction, 0)
+        await self.attack(interaction.user.id, 0)
+        await interaction.response.edit_message(embed=self.construct_embed())
 
     @discord.ui.button(label="2")
     async def two(self, interaction: discord.Interaction, item):
-        await self.attack(interaction, 1)
+        await self.attack(interaction.user.id, 1)
+        await interaction.response.edit_message(embed=self.construct_embed())
 
     @discord.ui.button(label="3")
     async def three(self, interaction: discord.Interaction, item):
-        await self.attack(interaction, 2)
+        await self.attack(interaction.user.id, 2)
+        await interaction.response.edit_message(embed=self.construct_embed())
 
     @discord.ui.button(label="4")
     async def four(self, interaction: discord.Interaction, item):
-        await self.attack(interaction, 3)
+        await self.attack(interaction.user.id, 3)
+        await interaction.response.edit_message(embed=self.construct_embed())
 
     @discord.ui.button(label="5")
     async def five(self, interaction: discord.Interaction, item):
-        await self.attack(interaction, 4)
+        await self.attack(interaction.user.id, 4)
+        await interaction.response.edit_message(embed=self.construct_embed())
 
-    @discord.ui.button(label="Special Ability", style=discord.ButtonStyle.green)
-    async def special(self):
-        self.special = True
+    async def attack(self, turn: int, used: int):  # turn is the user that clicked and used is the button they selected
+        if (len(self.cache[turn]["turns"]) + 1) % 2 == 0 and len(self.cache[turn]["turns"]) > 0:  # this is who to attack
+            self.cache[turn]["turns"].append(used)
 
-    async def attack(self, interaction, slot):
-        if interaction.user.id == self.turn:
-            if len(self.cache[self.turn]["turns"]) == 0 or len(self.cache[self.turn]["turns"]) % 2 == 0:
-                self.cache[self.turn]["turns"].append(slot)
-            else:
-                self.cache[self.turn]["turns"].append(slot)
+            not_turn = self.user1.id if turn == self.user2 else self.user2.id
 
-                self.remove_health(self.cache[self.turn]["turns"][-2], self.cache[self.turn]["turns"][-1])
-            self.next_turn(self.cache[self.turn]["turns"][-2])
+            attacker = self.cache[turn]["deck"][self.cache[turn]["turns"][-2]]
+            victim = self.cache[not_turn]["deck"][self.cache[turn]["turns"][-1]]
 
-    def remove_health(self, attacker, victim):
-        mult = 1
-        can = True
+            if not attacker["attributes"]["disabled"]:
+                # boost = self.add_boosters(attacker, victim)
+                boost = 1
 
-        v = self.cache[self.next][victim]
-        a = self.cache[self.turn][attacker]
+                self.cache[not_turn]["deck"][self.cache[turn]["turns"][-1]]["health"] -= boost * attacker["attack"]
 
-        # multipliers first
-        if not a["black"] and v["black"]:
-            mult = 10
+                if self.cache[not_turn]["deck"][self.cache[turn]["turns"][-1]]["health"] <= 0:
+                    self.cache[not_turn]["deck"].pop(self.cache[turn]["turns"][-1])
 
-        # can
-        if v["magic_only"] and not a["magic"]:
-            can = False
 
-        """
-        # specials
-        if self.special:
-            actual = [
-                "kkk monkey"
-            ]
+        else:  # select who is the attacker
+            self.cache[turn]["turns"].append(used)
 
-            if a["type"] in actual and not a["special_disabled"] and not a["disabled"]:
-                if a["type"] == "kkk monkey":
-                    self.round_damage.append(
-                        [victim, "pct", 0.95]
-                    )
-                elif a["type"] == "basic monkey":
-                    self.cache[self.turn][victim]["extra_turn"] = True
+    def load_deck(self, deck):
+        new_deck = []
+        for monkey in deck:
+            if monkey is not None:
+                monkey = database.get_monkey(monkey)
+                new_deck.append({
+                    "type": monkey["type"],
+                    "health": monkey["health"],
+                    "attack": monkey["attack"],
+                    "attributes": self.config["monkey_attributes"][monkey["type"]]
+                })
+        return new_deck
 
-                can = False
-        """
+    def construct_embed(self):
+        embed = discord.Embed(title="Battle")
 
-        if can:
-            self.cache[self.next][victim]["health"] -= a["attack"] * mult
+        monkeys = ""
 
-    def next_turn(self, used):
-        self.special = False
+        for pos, monkey in enumerate(self.cache[self.user1.id]["deck"]):
+            monkeys += f"({pos + 1}) **{monkey['type']}** {monkey['health']} :heart: {monkey['attack']} :dagger:\n"
 
-        if not self.cache[self.turn][used]["extra_turn"]:
-            current = self.turn
-            self.turn = self.next
-            self.next = current
+        embed.add_field(name=self.user1.name, value=monkeys)
+
+        monkeys = ""
+
+        for pos, monkey in enumerate(self.cache[self.user2.id]["deck"]):
+            monkeys += f"({pos + 1}) **{monkey['type']}** {monkey['health']} :heart: {monkey['attack']} :dagger:\n"
+
+        embed.add_field(name=self.user2.name, value=monkeys)
+        embed.add_field(name="Dev debug", value=f"`{self.cache[self.user1.id]}`")
+
+        return embed

@@ -12,6 +12,14 @@ class monkeys:
         self.ftm = {
             "assets/basic.png": "basic monkey",
             "assets/wizard.png": "wizard monkey",
+            "assets/ninja.png": "ninja monkey",
+            "assets/girl.png": "girl monkey",
+            "assets/kkk.png": "kkk monkey",
+            "assets/gorilla.png": "gorilla",
+            "assets/albino.png": "albino monkey",
+            "assets/dj.png": "dj monkey",
+            "assets/cyborg.png": "cyborg monkey",
+            "assets/soldier.png": "soldier monkey",
             "assets/violent.png": "violent monkey",
             "assets/zombie.png": "zombie monkey"
         }

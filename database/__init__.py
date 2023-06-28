@@ -25,7 +25,8 @@ def new_user(id: int, balance=0, daily=True):
         "daily": daily,
         "inventory": {},
         "pets": [],
-        "deck": [None, None, None, None, None]
+        "deck": [None, None, None, None, None],
+        "quests": [[0, 0], [1, 0], [2, 0]]
     })
 
 
@@ -81,6 +82,10 @@ stats = {
     "ninja monkey": {
         "health": 100,
         "attack": 150
+    },
+    "cyborg monkey": {
+        "health": 200,
+        "attack": 200
     },
     "gorilla": {
         "health": 1000,
@@ -144,3 +149,12 @@ def remove_from_deck_and_pets(id: int, pet: id):
 
     users.update_one({"id": id}, {"$set": {"deck": user["deck"]}})
     users.update_one({"id": id}, {"$set": {"pets": user["pets"]}})
+
+
+def update_quest(id: int, quest: int, increase: int):
+    user = get_user(id)
+    if user is None:
+        new_user(id)
+        user = get_user(id)
+    user["quests"][quest][1] += increase
+    users.update_one({"id": id}, {"$set": {"quests": user["quests"]}})
